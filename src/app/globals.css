@@ -1,0 +1,85 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap');
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body, #__next {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: #ffffff;
+  color: #1d2939;
+  -webkit-font-smoothing: antialiased;
+}
+
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-track{background:#fff;}
+::-webkit-scrollbar-thumb{background:#1e2d3d;border-radius:4px;}
+
+/* ── AWS-style gradient background (like screenshot) ── */
+.aws-grad-bg {
+  background: linear-gradient(135deg,
+    #e8eaf6 0%, #e3f2fd 25%,
+    #e8eaf6 50%, #fce4ec 75%,
+    #e8eaf6 100%);
+  background-size: 400% 400%;
+  animation: bgShift 12s ease infinite;
+}
+
+/* ── Moving gradient text ── */
+.grad-text {
+  background: linear-gradient(90deg, #1e2d3d, #FF9900, #0073BB, #1e2d3d);
+  background-size: 300% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradShift 5s ease infinite;
+}
+.grad-text-static {
+  background: linear-gradient(135deg, #FF9900, #E68900);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Shimmer ── */
+.shimmer {
+  background: linear-gradient(90deg,#f0ece8 25%,#e5e0db 50%,#f0ece8 75%);
+  background-size: 300px 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* ── Typewriter cursor ── */
+.tw-cursor::after {
+  content:'|';
+  animation: blink .8s step-end infinite;
+  color: #FF9900;
+  font-weight:300;
+}
+
+/* ── Marquee ── */
+.marquee-track { animation: marquee 30s linear infinite; }
+.marquee-track:hover { animation-play-state: paused; }
+
+/* ── Keyframes ── */
+@keyframes bgShift    { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
+@keyframes gradShift  { 0%,100%{background-position:0% center} 50%{background-position:100% center} }
+@keyframes shimmer    { 0%{background-position:-300px 0} 100%{background-position:300px 0} }
+@keyframes marquee    { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+@keyframes blink      { 0%,100%{opacity:1} 50%{opacity:0} }
+@keyframes float      { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+@keyframes floatB     { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+@keyframes pulseRing  { 0%{transform:scale(1);opacity:.8} 100%{transform:scale(2.2);opacity:0} }
+@keyframes pulseDot   { 0%,100%{opacity:.5;transform:scale(1)} 50%{opacity:1;transform:scale(1.2)} }
+@keyframes spinSlow   { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+@keyframes drawBar    { from{width:0} to{width:var(--bar-w,100%)} }
+@keyframes scanLine   { 0%{left:-100%} 100%{left:200%} }
+@keyframes orbit      { from{transform:rotate(0deg) translateX(28px) rotate(0deg)} to{transform:rotate(360deg) translateX(28px) rotate(-360deg)} }
+@keyframes bounceIn   { 0%{transform:scale(.6) translateY(30px);opacity:0} 60%{transform:scale(1.06) translateY(-6px)} 100%{transform:scale(1) translateY(0);opacity:1} }
+@keyframes blob       { 0%,100%{transform:translate(0,0) scale(1)} 33%{transform:translate(40px,-30px) scale(1.06)} 66%{transform:translate(-25px,35px) scale(.95)} }
