@@ -1,7 +1,529 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useState, useEffect, useRef } from "react";
+import { motion } from "framer-motion";
+import { Renderer, Camera, Transform, Plane, Program, Mesh, Texture, type OGLRenderingContext } from 'ogl';
+
+type GL = OGLRenderingContext;
+type OGLProgram = Program;
+type OGLMesh = Mesh;
+type OGLTransform = Transform;
+type OGLPlane = Plane;
+
+interface ScreenSize {
+  width: number;
+  height: number;
+}
+
+interface ViewportSize {
+  width: number;
+  height: number;
+}
+
+interface ScrollState {
+  position?: number;
+  ease: number;
+  current: number;
+  target: number;
+  last: number;
+}
+
+interface AutoBindOptions {
+  include?: Array<string | RegExp>;
+  exclude?: Array<string | RegExp>;
+}
+
+interface MediaParams {
+  gl: GL;
+  geometry: OGLPlane;
+  scene: OGLTransform;
+  screen: ScreenSize;
+  viewport: ViewportSize;
+  image: string;
+  length: number;
+  index: number;
+  distortion: number;
+}
+
+interface CanvasParams {
+  container: HTMLElement;
+  canvas: HTMLCanvasElement;
+  items: string[];
+  distortion: number;
+  scrollEase: number;
+  cameraFov: number;
+  cameraZ: number;
+  onIndexChange: (idx: number) => void;
+}
+
+const vertexShader = `
+precision highp float;
+
+attribute vec3 position;
+attribute vec2 uv;
+attribute vec3 normal;
+
+uniform mat4 modelViewMatrix;
+uniform mat4 projectionMatrix;
+uniform mat3 normalMatrix;
+
+uniform float uPosition;
+uniform float uTime;
+uniform float uSpeed;
+uniform vec3 distortionAxis;
+uniform vec3 rotationAxis;
+uniform float uDistortion;
+
+varying vec2 vUv;
+varying vec3 vNormal;
+
+float PI = 3.141592653589793238;
+mat4 rotationMatrix(vec3 axis, float angle) {
+    axis = normalize(axis);
+    float s = sin(angle);
+    float c = cos(angle);
+    float oc = 1.0 - c;
+    
+    return mat4(
+      oc * axis.x * axis.x + c,         oc * axis.x * axis.y - axis.z * s,  oc * axis.z * axis.x + axis.y * s,  0.0,
+      oc * axis.x * axis.y + axis.z * s,oc * axis.y * axis.y + c,           oc * axis.y * axis.z - axis.x * s,  0.0,
+      oc * axis.z * axis.x - axis.y * s,oc * axis.y * axis.z + axis.x * s,  oc * axis.z * axis.z + c,           0.0,
+      0.0,                              0.0,                                0.0,                                1.0
+    );
+}
+
+vec3 rotate(vec3 v, vec3 axis, float angle) {
+  mat4 m = rotationMatrix(axis, angle);
+  return (m * vec4(v, 1.0)).xyz;
+}
+
+float qinticInOut(float t) {
+  return t < 0.5
+    ? 16.0 * pow(t, 5.0)
+    : -0.5 * abs(pow(2.0 * t - 2.0, 5.0)) + 1.0;
+}
+
+void main() {
+  vUv = uv;
+  
+  float norm = 0.5;
+  vec3 newpos = position;
+  float offset = (dot(distortionAxis, position) + norm / 2.) / norm;
+  float localprogress = clamp(
+    (fract(uPosition * 5.0 * 0.01) - 0.01 * uDistortion * offset) / (1. - 0.01 * uDistortion),
+    0.,
+    2.
+  );
+  localprogress = qinticInOut(localprogress) * PI;
+  newpos = rotate(newpos, rotationAxis, localprogress);
+
+  gl_Position = projectionMatrix * modelViewMatrix * vec4(newpos, 1.0);
+}
+`;
+
+const fragmentShader = `
+precision highp float;
+
+uniform vec2 uImageSize;
+uniform vec2 uPlaneSize;
+uniform sampler2D tMap;
+
+varying vec2 vUv;
+
+void main() {
+  vec2 imageSize = uImageSize;
+  vec2 planeSize = uPlaneSize;
+
+  float imageAspect = imageSize.x / imageSize.y;
+  float planeAspect = planeSize.x / planeSize.y;
+  vec2 scale = vec2(1.0, 1.0);
+
+  if (planeAspect > imageAspect) {
+      scale.x = imageAspect / planeAspect;
+  } else {
+      scale.y = planeAspect / imageAspect;
+  }
+
+  vec2 uv = vUv * scale + (1.0 - scale) * 0.5;
+
+  gl_FragColor = texture2D(tMap, uv);
+}
+`;
+
+function AutoBind(self: any, { include, exclude }: AutoBindOptions = {}) {
+  const getAllProperties = (object: any): Set<[any, string | symbol]> => {
+    const properties = new Set<[any, string | symbol]>();
+    do {
+      for (const key of Reflect.ownKeys(object)) {
+        properties.add([object, key]);
+      }
+    } while ((object = Reflect.getPrototypeOf(object)) && object !== Object.prototype);
+    return properties;
+  };
+
+  const filter = (key: string | symbol) => {
+    const match = (pattern: string | RegExp) =>
+      typeof pattern === 'string' ? key === pattern : (pattern as RegExp).test(key.toString());
+
+    if (include) return include.some(match);
+    if (exclude) return !exclude.some(match);
+    return true;
+  };
+
+  for (const [object, key] of getAllProperties(self.constructor.prototype)) {
+    if (key === 'constructor' || !filter(key)) continue;
+    const descriptor = Reflect.getOwnPropertyDescriptor(object, key);
+    if (descriptor && typeof descriptor.value === 'function') {
+      self[key] = self[key].bind(self);
+    }
+  }
+  return self;
+}
+
+function lerp(p1: number, p2: number, t: number): number {
+  return p1 + (p2 - p1) * t;
+}
+
+function map(num: number, min1: number, max1: number, min2: number, max2: number, round = false): number {
+  const num1 = (num - min1) / (max1 - min1);
+  const num2 = num1 * (max2 - min2) + min2;
+  return round ? Math.round(num2) : num2;
+}
+
+class Media {
+  gl: GL;
+  geometry: OGLPlane;
+  scene: OGLTransform;
+  screen: ScreenSize;
+  viewport: ViewportSize;
+  image: string;
+  length: number;
+  index: number;
+  distortion: number;
+
+  planeWidth = 0;
+  planeHeight = 0;
+  program!: OGLProgram;
+  plane!: OGLMesh;
+  extra = 0;
+  padding = 0;
+  height = 0;
+  heightTotal = 0;
+  y = 0;
+
+  constructor({
+    gl,
+    geometry,
+    scene,
+    screen,
+    viewport,
+    image,
+    length,
+    index,
+    distortion
+  }: MediaParams) {
+    this.gl = gl;
+    this.geometry = geometry;
+    this.scene = scene;
+    this.screen = screen;
+    this.viewport = viewport;
+    this.image = image;
+    this.length = length;
+    this.index = index;
+    this.distortion = distortion;
+
+    this.createShader();
+    this.createMesh();
+    this.onResize();
+  }
+
+  createShader() {
+    const texture = new Texture(this.gl, { generateMipmaps: false });
+    this.program = new Program(this.gl, {
+      depthTest: false,
+      depthWrite: false,
+      fragment: fragmentShader,
+      vertex: vertexShader,
+      uniforms: {
+        tMap: { value: texture },
+        uPosition: { value: 0 },
+        uPlaneSize: { value: [0, 0] },
+        uImageSize: { value: [0, 0] },
+        uSpeed: { value: 0 },
+        rotationAxis: { value: [0, 1, 0] },
+        distortionAxis: { value: [1, 1, 0] },
+        uDistortion: { value: this.distortion },
+        uViewportSize: { value: [this.viewport.width, this.viewport.height] },
+        uTime: { value: 0 }
+      },
+      cullFace: false
+    });
+
+    const img = new Image();
+    img.src = this.image;
+    img.onload = () => {
+      texture.image = img;
+      this.program.uniforms.uImageSize.value = [img.naturalWidth, img.naturalHeight];
+    };
+  }
+
+  createMesh() {
+    this.plane = new Mesh(this.gl, {
+      geometry: this.geometry,
+      program: this.program
+    });
+    this.plane.setParent(this.scene);
+  }
+
+  setScale() {
+    this.plane.scale.x = (this.viewport.width * this.planeWidth) / this.screen.width;
+    this.plane.scale.y = (this.viewport.height * this.planeHeight) / this.screen.height;
+    this.plane.position.x = 0;
+    this.program.uniforms.uPlaneSize.value = [this.plane.scale.x, this.plane.scale.y];
+  }
+
+  onResize({ screen, viewport }: { screen?: ScreenSize; viewport?: ViewportSize } = {}) {
+    if (screen) this.screen = screen;
+    if (viewport) {
+      this.viewport = viewport;
+      this.program.uniforms.uViewportSize.value = [viewport.width, viewport.height];
+    }
+    
+    // Make the plane fill 85% of screen height and width (with nice margin)
+    this.planeWidth = this.screen.width * 0.85;
+    this.planeHeight = this.screen.height * 0.85;
+    this.setScale();
+
+    this.padding = 20;
+    this.height = this.plane.scale.y + (this.viewport.height * this.padding) / this.screen.height;
+    this.heightTotal = this.height * this.length;
+    this.y = -this.heightTotal / 2 + (this.index + 0.5) * this.height;
+  }
+
+  update(scroll: ScrollState) {
+    this.plane.position.y = this.y - scroll.current - this.extra;
+    const position = map(this.plane.position.y, -this.viewport.height, this.viewport.height, 5, 15);
+
+    this.program.uniforms.uPosition.value = position;
+    this.program.uniforms.uTime.value += 0.04;
+    this.program.uniforms.uSpeed.value = scroll.current;
+
+    const planeHeight = this.plane.scale.y;
+    const viewportHeight = this.viewport.height;
+    const topEdge = this.plane.position.y + planeHeight / 2;
+    const bottomEdge = this.plane.position.y - planeHeight / 2;
+
+    if (topEdge < -viewportHeight / 2) {
+      this.extra -= this.heightTotal;
+    } else if (bottomEdge > viewportHeight / 2) {
+      this.extra += this.heightTotal;
+    }
+  }
+}
+
+class Canvas {
+  container: HTMLElement;
+  canvas: HTMLCanvasElement;
+  items: string[];
+  distortion: number;
+  scroll: ScrollState;
+  cameraFov: number;
+  cameraZ: number;
+  onIndexChange: (idx: number) => void;
+
+  renderer!: Renderer;
+  gl!: GL;
+  camera!: Camera;
+  scene!: OGLTransform;
+  planeGeometry!: OGLPlane;
+  medias!: Media[];
+  screen!: ScreenSize;
+  viewport!: ViewportSize;
+  isDown = false;
+  start = 0;
+  loaded = 0;
+  animationFrameId = 0;
+  wheelTimeout: any = null;
+  lastActiveIndex = 0;
+
+  constructor({
+    container,
+    canvas,
+    items,
+    distortion,
+    scrollEase,
+    cameraFov,
+    cameraZ,
+    onIndexChange
+  }: CanvasParams) {
+    this.container = container;
+    this.canvas = canvas;
+    this.items = items;
+    this.distortion = distortion;
+    this.scroll = {
+      ease: scrollEase,
+      current: 0,
+      target: 0,
+      last: 0
+    };
+    this.cameraFov = cameraFov;
+    this.cameraZ = cameraZ;
+    this.onIndexChange = onIndexChange;
+
+    AutoBind(this);
+    this.createRenderer();
+    this.createCamera();
+    this.createScene();
+    this.onResize();
+    this.createGeometry();
+    this.createMedias();
+    this.update();
+    this.addEventListeners();
+  }
+
+  createRenderer() {
+    this.renderer = new Renderer({
+      canvas: this.canvas,
+      alpha: true,
+      antialias: true,
+      dpr: Math.min(window.devicePixelRatio, 2)
+    });
+    this.gl = this.renderer.gl;
+  }
+
+  createCamera() {
+    this.camera = new Camera(this.gl);
+    this.camera.fov = this.cameraFov;
+    this.camera.position.z = this.cameraZ;
+  }
+
+  createScene() {
+    this.scene = new Transform();
+  }
+
+  createGeometry() {
+    this.planeGeometry = new Plane(this.gl, {
+      heightSegments: 1,
+      widthSegments: 100
+    });
+  }
+
+  createMedias() {
+    this.medias = this.items.map(
+      (image, index) =>
+        new Media({
+          gl: this.gl,
+          geometry: this.planeGeometry,
+          scene: this.scene,
+          screen: this.screen,
+          viewport: this.viewport,
+          image,
+          length: this.items.length,
+          index,
+          distortion: this.distortion
+        })
+    );
+  }
+
+  onResize() {
+    const rect = this.container.getBoundingClientRect();
+    this.screen = { width: rect.width, height: rect.height };
+    this.renderer.setSize(this.screen.width, this.screen.height);
+
+    this.camera.perspective({
+      aspect: this.gl.canvas.width / this.gl.canvas.height
+    });
+
+    const fov = (this.camera.fov * Math.PI) / 180;
+    const height = 2 * Math.tan(fov / 2) * this.camera.position.z;
+    const width = height * this.camera.aspect;
+    this.viewport = { width, height };
+
+    this.medias?.forEach(media => media.onResize({ screen: this.screen, viewport: this.viewport }));
+  }
+
+  onTouchDown(e: MouseEvent | TouchEvent) {
+    this.isDown = true;
+    this.scroll.position = this.scroll.current;
+    this.start = e instanceof TouchEvent ? e.touches[0].clientY : e.clientY;
+  }
+
+  onTouchMove(e: MouseEvent | TouchEvent) {
+    if (!this.isDown || this.scroll.position === undefined) return;
+    const y = e instanceof TouchEvent ? e.touches[0].clientY : e.clientY;
+    const distance = (this.start - y) * 0.05;
+    this.scroll.target = this.scroll.position + distance;
+  }
+
+  onTouchUp() {
+    this.isDown = false;
+    if (this.medias && this.medias.length > 0) {
+      const itemHeight = this.medias[0].height;
+      const closestSlide = Math.round(this.scroll.target / itemHeight);
+      this.scroll.target = closestSlide * itemHeight;
+    }
+  }
+
+  onWheel(e: WheelEvent) {
+    e.preventDefault();
+    if (this.wheelTimeout) clearTimeout(this.wheelTimeout);
+    
+    this.scroll.target += e.deltaY * 0.003;
+    
+    this.wheelTimeout = setTimeout(() => {
+      if (this.medias && this.medias.length > 0) {
+        const itemHeight = this.medias[0].height;
+        const closestSlide = Math.round(this.scroll.target / itemHeight);
+        this.scroll.target = closestSlide * itemHeight;
+      }
+    }, 150);
+  }
+
+  update() {
+    this.scroll.current = lerp(this.scroll.current, this.scroll.target, this.scroll.ease);
+    this.medias?.forEach(media => media.update(this.scroll));
+    this.renderer.render({ scene: this.scene, camera: this.camera });
+    this.scroll.last = this.scroll.current;
+
+    // Synchronize current slide index back to React
+    if (this.medias && this.medias.length > 0) {
+      const itemHeight = this.medias[0].height;
+      const rawIndex = this.scroll.current / itemHeight;
+      const total = this.items.length;
+      const roundedIndex = ((Math.round(rawIndex) % total) + total) % total;
+      if (roundedIndex !== this.lastActiveIndex) {
+        this.lastActiveIndex = roundedIndex;
+        this.onIndexChange(roundedIndex);
+      }
+    }
+
+    this.animationFrameId = requestAnimationFrame(this.update);
+  }
+
+  addEventListeners() {
+    window.addEventListener('resize', this.onResize);
+    window.addEventListener('wheel', this.onWheel);
+    window.addEventListener('mousedown', this.onTouchDown);
+    window.addEventListener('mousemove', this.onTouchMove);
+    window.addEventListener('mouseup', this.onTouchUp);
+    window.addEventListener('touchstart', this.onTouchDown as EventListener);
+    window.addEventListener('touchmove', this.onTouchMove as EventListener);
+    window.addEventListener('touchend', this.onTouchUp as EventListener);
+  }
+
+  destroy() {
+    cancelAnimationFrame(this.animationFrameId);
+    if (this.wheelTimeout) clearTimeout(this.wheelTimeout);
+    window.removeEventListener('resize', this.onResize);
+    window.removeEventListener('wheel', this.onWheel);
+    window.removeEventListener('mousedown', this.onTouchDown);
+    window.removeEventListener('mousemove', this.onTouchMove);
+    window.removeEventListener('mouseup', this.onTouchUp);
+    window.removeEventListener('touchstart', this.onTouchDown as EventListener);
+    window.removeEventListener('touchmove', this.onTouchMove as EventListener);
+    window.removeEventListener('touchend', this.onTouchUp as EventListener);
+  }
+}
 
 const ArrowButton = ({ isLeft, hovered, onClick }: { isLeft: boolean; hovered: boolean; onClick: () => void }) => {
   const [btnHovered, setBtnHovered] = React.useState(false);
@@ -95,41 +617,208 @@ const STORIES = [
   }
 ];
 
+const generateSlideImage = (title: string, desc: string): string => {
+  if (typeof window === "undefined") return "";
+  const width = 1040;
+  const height = 640;
+  const canvas = document.createElement("canvas");
+  canvas.width = width;
+  canvas.height = height;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return "";
+
+  // 1. Card background gradient
+  const bgGrad = ctx.createLinearGradient(0, 0, width, height);
+  bgGrad.addColorStop(0, "#FFFFFF");
+  bgGrad.addColorStop(0.25, "#E8F4FD");
+  bgGrad.addColorStop(0.6, "#FFF3E0");
+  bgGrad.addColorStop(1, "#FFFFFF");
+  ctx.fillStyle = bgGrad;
+  
+  const radius = 64;
+  ctx.beginPath();
+  ctx.roundRect(0, 0, width, height, radius);
+  ctx.fill();
+
+  // 2. Spotlight Glows
+  // Blue glow top-left
+  const blueGlow = ctx.createRadialGradient(280, 140, 0, 280, 140, 360);
+  blueGlow.addColorStop(0, "rgba(0, 115, 187, 0.14)");
+  blueGlow.addColorStop(1, "rgba(0, 115, 187, 0)");
+  ctx.fillStyle = blueGlow;
+  ctx.beginPath();
+  ctx.roundRect(0, 0, width, height, radius);
+  ctx.fill();
+
+  // Orange glow bottom-right
+  const orangeGlow = ctx.createRadialGradient(760, 500, 0, 760, 500, 360);
+  orangeGlow.addColorStop(0, "rgba(255, 153, 0, 0.18)");
+  orangeGlow.addColorStop(1, "rgba(255, 153, 0, 0)");
+  ctx.fillStyle = orangeGlow;
+  ctx.beginPath();
+  ctx.roundRect(0, 0, width, height, radius);
+  ctx.fill();
+
+  // 3. Gradient border stroke
+  const strokeGrad = ctx.createLinearGradient(0, 0, width, height);
+  strokeGrad.addColorStop(0, "#FFFFFF");
+  strokeGrad.addColorStop(0.4, "#0073BB");
+  strokeGrad.addColorStop(0.7, "#FF9900");
+  strokeGrad.addColorStop(1, "#FFFFFF");
+  ctx.strokeStyle = strokeGrad;
+  ctx.lineWidth = 5;
+  ctx.beginPath();
+  ctx.roundRect(2.5, 2.5, width - 5, height - 5, radius - 2.5);
+  ctx.stroke();
+
+  // 4. Orange accent line
+  ctx.fillStyle = "#FF9900";
+  ctx.beginPath();
+  ctx.roundRect(width / 2 - 32, 100, 64, 4, 4);
+  ctx.fill();
+
+  // 5. Title
+  ctx.fillStyle = "#232F3E";
+  ctx.font = "800 44px system-ui, -apple-system, sans-serif";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText(title, width / 2, 160);
+
+  // 6. Wrapped Description
+  ctx.fillStyle = "#4b5563";
+  ctx.font = "500 28px system-ui, -apple-system, sans-serif";
+  
+  const words = desc.split(" ");
+  const lines: string[] = [];
+  let currentLine = "";
+  const maxWidth = 760;
+
+  for (let i = 0; i < words.length; i++) {
+    const testLine = currentLine + words[i] + " ";
+    const metrics = ctx.measureText(testLine);
+    if (metrics.width > maxWidth && i > 0) {
+      lines.push(currentLine);
+      currentLine = words[i] + " ";
+    } else {
+      currentLine = testLine;
+    }
+  }
+  lines.push(currentLine);
+
+  const startY = 250;
+  const lineHeight = 44;
+  ctx.textBaseline = "top";
+  for (let i = 0; i < lines.length; i++) {
+    ctx.fillText(lines[i].trim(), width / 2, startY + i * lineHeight);
+  }
+
+  // 7. Badge
+  const badgeText = "AWS SBG REC";
+  ctx.font = "bold 20px system-ui, -apple-system, sans-serif";
+  const badgeMetrics = ctx.measureText(badgeText);
+  const badgeW = badgeMetrics.width + 48;
+  const badgeH = 40;
+  const badgeX = width / 2 - badgeW / 2;
+  const badgeY = height - 120;
+
+  ctx.fillStyle = "rgba(35,47,62,.06)";
+  ctx.beginPath();
+  ctx.roundRect(badgeX, badgeY, badgeW, badgeH, 20);
+  ctx.fill();
+
+  ctx.strokeStyle = "rgba(35,47,62,.1)";
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  ctx.fillStyle = "#232F3E";
+  ctx.textBaseline = "middle";
+  ctx.fillText(badgeText, width / 2, badgeY + badgeH / 2);
+
+  return canvas.toDataURL("image/png");
+};
+
 export default function CloudStory() {
   const [index, setIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
-  const [direction, setDirection] = useState(1);
-  const [isFlipping, setIsFlipping] = useState(false);
-
+  const [slideImages, setSlideImages] = useState<string[]>([]);
+  
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const instanceRef = useRef<Canvas | null>(null);
   const totalSlides = STORIES.length;
 
+  // Generate canvas slides on mount
+  useEffect(() => {
+    const images = STORIES.map(s => generateSlideImage(s.title, s.desc));
+    setSlideImages(images);
+  }, []);
+
+  // Set up Canvas instance
+  useEffect(() => {
+    if (slideImages.length === 0 || !canvasRef.current) return;
+
+    const parentContainer = canvasRef.current.parentElement;
+    if (!parentContainer) return;
+
+    const canvasInstance = new Canvas({
+      container: parentContainer,
+      canvas: canvasRef.current,
+      items: slideImages,
+      distortion: 3,
+      scrollEase: 0.05,
+      cameraFov: 45,
+      cameraZ: 20,
+      onIndexChange: (idx) => {
+        setIndex(idx);
+      }
+    });
+
+    instanceRef.current = canvasInstance;
+
+    // Set initial position
+    const itemHeight = canvasInstance.medias[0].height;
+    canvasInstance.scroll.target = index * itemHeight;
+    canvasInstance.scroll.current = index * itemHeight;
+
+    const handleWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      canvasInstance.onWheel(e);
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      e.preventDefault();
+    };
+
+    const canvasEl = canvasRef.current;
+    canvasEl.addEventListener('wheel', handleWheel, { passive: false });
+    canvasEl.addEventListener('touchmove', handleTouchMove, { passive: false });
+
+    return () => {
+      canvasInstance.destroy();
+      canvasEl.removeEventListener('wheel', handleWheel);
+      canvasEl.removeEventListener('touchmove', handleTouchMove);
+      instanceRef.current = null;
+    };
+  }, [slideImages]);
+
   const nextSlide = () => {
-    if (isFlipping) return;
-    setIsFlipping(true);
-    setDirection(1);
-    setIndex((prev) => (prev === totalSlides - 1 ? 0 : prev + 1));
-    setTimeout(() => setIsFlipping(false), 500);
+    const nextIdx = index === totalSlides - 1 ? 0 : index + 1;
+    setIndex(nextIdx);
+    if (instanceRef.current && instanceRef.current.medias) {
+      const itemHeight = instanceRef.current.medias[0].height;
+      instanceRef.current.scroll.target = nextIdx * itemHeight;
+    }
   };
 
   const prevSlide = () => {
-    if (isFlipping) return;
-    setIsFlipping(true);
-    setDirection(-1);
-    setIndex((prev) => (prev === 0 ? totalSlides - 1 : prev - 1));
-    setTimeout(() => setIsFlipping(false), 500);
+    const prevIdx = index === 0 ? totalSlides - 1 : index - 1;
+    setIndex(prevIdx);
+    if (instanceRef.current && instanceRef.current.medias) {
+      const itemHeight = instanceRef.current.medias[0].height;
+      instanceRef.current.scroll.target = prevIdx * itemHeight;
+    }
   };
 
-  useEffect(() => {
-    if (isHovered || isFlipping) return;
-    const timer = setInterval(() => {
-      setIsFlipping(true);
-      setDirection(1);
-      setIndex((prev) => (prev === totalSlides - 1 ? 0 : prev + 1));
-      setTimeout(() => setIsFlipping(false), 500);
-    }, 5000);
-    return () => clearInterval(timer);
-  }, [isHovered, isFlipping, index]);
-
+  // Keyboard navigation
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
       if (e.key === "ArrowLeft") prevSlide();
@@ -137,54 +826,16 @@ export default function CloudStory() {
     };
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
-  }, [index, isFlipping]);
+  }, [index, slideImages]);
 
-  const pageVariants = {
-    enter: (dir: number) => ({
-      rotateY: dir > 0 ? 90 : -90,
-      opacity: 0,
-      scale: 0.9,
-      transformOrigin: dir > 0 ? "left center" : "right center",
-    }),
-    center: {
-      rotateY: 0,
-      opacity: 1,
-      scale: 1,
-      transformOrigin: "center center",
-      transition: {
-        rotateY: {
-          type: "spring",
-          stiffness: 180,
-          damping: 22,
-        },
-        opacity: {
-          duration: 0.25,
-          ease: "easeIn",
-        },
-        scale: {
-          type: "spring",
-          stiffness: 180,
-          damping: 22,
-        },
-      },
-    },
-    exit: (dir: number) => ({
-      rotateY: dir > 0 ? -90 : 90,
-      opacity: 0,
-      scale: 0.88,
-      transformOrigin: dir > 0 ? "right center" : "left center",
-      transition: {
-        rotateY: {
-          duration: 0.3,
-          ease: [0.4, 0, 1, 1],
-        },
-        opacity: {
-          duration: 0.18,
-          ease: "easeIn",
-        },
-      },
-    }),
-  };
+  // Auto advance
+  useEffect(() => {
+    if (isHovered || slideImages.length === 0) return;
+    const timer = setInterval(() => {
+      nextSlide();
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [isHovered, index, slideImages]);
 
   return (
     <div
@@ -200,7 +851,7 @@ export default function CloudStory() {
         perspective: "1000px",
       }}
     >
-      {/* Container for the animated cloud cards */}
+      {/* Container for the canvas card */}
       <div
         style={{
           position: "relative",
@@ -210,180 +861,27 @@ export default function CloudStory() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          transformStyle: "preserve-3d",
         }}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
         <ArrowButton isLeft={true} hovered={isHovered} onClick={prevSlide} />
 
-        <motion.div
-          animate={{
-            y: [0, -8, 0],
-          }}
-          transition={{
-            duration: 6,
-            ease: "easeInOut",
-            repeat: Infinity,
-            repeatType: "mirror"
-          }}
+        <div
           style={{
             width: "100%",
             height: "100%",
             position: "relative",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            background: "linear-gradient(135deg, #FFFFFF 0%, #E8F4FD 25%, #FFF3E0 60%, #FFFFFF 100%) padding-box, linear-gradient(135deg, #FFFFFF 0%, #0073BB 40%, #FF9900 70%, #FFFFFF 100%) border-box",
-            border: "2.5px solid transparent",
-            borderRadius: "32px",
-            boxShadow: "0 24px 48px rgba(35, 47, 62, 0.08), inset 0 0 40px rgba(255, 255, 255, 0.6)",
             overflow: "hidden",
           }}
         >
-          {/* Spotlight Glows inside the Card */}
-          <div
-            style={{
-              position: "absolute",
-              bottom: "-10%",
-              right: "-10%",
-              width: "280px",
-              height: "280px",
-              borderRadius: "50%",
-              background: "radial-gradient(circle, rgba(255, 153, 0, 0.22) 0%, transparent 70%)",
-              pointerEvents: "none",
-              zIndex: 1,
-            }}
-          />
-          <div
-            style={{
-              position: "absolute",
-              top: "-10%",
-              left: "-10%",
-              width: "280px",
-              height: "280px",
-              borderRadius: "50%",
-              background: "radial-gradient(circle, rgba(0, 115, 187, 0.16) 0%, transparent 70%)",
-              pointerEvents: "none",
-              zIndex: 1,
-            }}
-          />
+          {slideImages.length > 0 ? (
+            <canvas ref={canvasRef} style={{ display: "block", width: "100%", height: "100%" }} />
+          ) : (
+            <div style={{ color: "#4b5563", fontSize: "14px", fontWeight: 500 }}>Loading story...</div>
+          )}
+        </div>
 
-          {/* Text Content */}
-          <div 
-            style={{ 
-              position: "relative", 
-              zIndex: 10, 
-              width: "85%", 
-              height: "75%",
-              perspective: "800px",
-              perspectiveOrigin: "center center",
-            }}
-          >
-            <AnimatePresence mode="wait" custom={direction}>
-              <motion.div
-                key={index}
-                custom={direction}
-                variants={pageVariants}
-                initial="enter"
-                animate="center"
-                exit="exit"
-                drag="x"
-                dragConstraints={{ left: 0, right: 0 }}
-                dragElastic={0.1}
-                onDragEnd={(e, info) => {
-                  if (info.offset.x < -50) nextSlide();
-                  if (info.offset.x > 50) prevSlide();
-                }}
-                style={{
-                  cursor: "default",
-                  position: "absolute",
-                  inset: 0,
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  padding: "0 40px",
-                  transformStyle: "preserve-3d",
-                  backfaceVisibility: "hidden",
-                  WebkitBackfaceVisibility: "hidden",
-                }}
-              >
-                <div
-                  style={{
-                    width: "32px",
-                    height: "2px",
-                    background: "#FF9900",
-                    borderRadius: "2px",
-                    margin: "0 auto 10px",
-                  }}
-                />
-                <h3
-                  style={{
-                    fontSize: "22px",
-                    fontWeight: 800,
-                    color: "#232F3E",
-                    marginBottom: "12px",
-                    letterSpacing: "-0.02em",
-                    textAlign: "center"
-                  }}
-                >
-                  {STORIES[index].title}
-                </h3>
-                <p
-                  style={{
-                    fontSize: "14px",
-                    color: "#4b5563",
-                    lineHeight: 1.75,
-                    fontWeight: 500,
-                    textAlign: "center",
-                    maxWidth: "320px",
-                    margin: "0 auto"
-                  }}
-                >
-                  {STORIES[index].desc}
-                </p>
-                <div
-                  style={{
-                    marginTop: "14px",
-                    display: "inline-block",
-                    padding: "3px 12px",
-                    borderRadius: "100px",
-                    background: "rgba(35,47,62,.06)",
-                    border: "1px solid rgba(35,47,62,.1)",
-                    fontSize: "10px",
-                    fontWeight: 700,
-                    color: "#232F3E",
-                    letterSpacing: ".08em",
-                    textTransform: "uppercase",
-                  }}
-                >
-                  AWS SBG REC
-                </div>
-
-                {/* Glare sweep during flip */}
-                <motion.div
-                  initial={{ opacity: 0, x: "-100%" }}
-                  animate={isFlipping
-                    ? { opacity: [0, 0.3, 0], x: ["-100%", "100%"] }
-                    : { opacity: 0 }
-                  }
-                  transition={{ duration: 0.4, ease: "easeInOut" }}
-                  style={{
-                    position: "absolute",
-                    inset: 0,
-                    background: "linear-gradient(105deg, transparent 25%, rgba(255,255,255,0.18) 50%, transparent 75%)",
-                    pointerEvents: "none",
-                    zIndex: 10,
-                    borderRadius: "inherit",
-                  }}
-                />
-              </motion.div>
-            </AnimatePresence>
-          </div>
-        </motion.div>
-      
         <ArrowButton isLeft={false} hovered={isHovered} onClick={nextSlide} />
       </div>
 
@@ -403,11 +901,11 @@ export default function CloudStory() {
             <button
               key={idx}
               onClick={() => {
-                if (isFlipping) return;
-                setIsFlipping(true);
-                setDirection(idx > index ? 1 : -1);
                 setIndex(idx);
-                setTimeout(() => setIsFlipping(false), 500);
+                if (instanceRef.current && instanceRef.current.medias) {
+                  const itemHeight = instanceRef.current.medias[0].height;
+                  instanceRef.current.scroll.target = idx * itemHeight;
+                }
               }}
               style={{
                 width: "8px",
