@@ -235,77 +235,48 @@ export default function CloudStory() {
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
-            filter: "drop-shadow(0 24px 32px rgba(35, 47, 62, 0.12))",
+            background: "linear-gradient(135deg, #FFFFFF 0%, #E8F4FD 25%, #FFF3E0 60%, #FFFFFF 100%) padding-box, linear-gradient(135deg, #FFFFFF 0%, #0073BB 40%, #FF9900 70%, #FFFFFF 100%) border-box",
+            border: "2.5px solid transparent",
+            borderRadius: "32px",
+            boxShadow: "0 24px 48px rgba(35, 47, 62, 0.08), inset 0 0 40px rgba(255, 255, 255, 0.6)",
+            overflow: "hidden",
           }}
         >
-          {/* NEW SINGLE SVG CLOUD (Wide and Flat) */}
-          <svg 
-            viewBox="0 0 520 320"
-            style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }}
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <defs>
-              <linearGradient id="cloudFill" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#FFFFFF" stopOpacity="1"/>
-                <stop offset="25%" stopColor="#E8F4FD" stopOpacity=".75"/>
-                <stop offset="60%" stopColor="#FFF3E0" stopOpacity=".70"/>
-                <stop offset="100%" stopColor="#FFFFFF" stopOpacity="1"/>
-              </linearGradient>
-
-              <radialGradient id="cloudGlow" cx="72%" cy="80%" r="38%">
-                <stop offset="0%" stopColor="#FF9900" stopOpacity=".22"/>
-                <stop offset="100%" stopColor="#FF9900" stopOpacity="0"/>
-              </radialGradient>
-
-              <radialGradient id="cloudGlowBlue" cx="28%" cy="22%" r="35%">
-                <stop offset="0%" stopColor="#0073BB" stopOpacity=".16"/>
-                <stop offset="100%" stopColor="#0073BB" stopOpacity="0"/>
-              </radialGradient>
-
-              <linearGradient id="strokeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.9"/>
-                <stop offset="40%" stopColor="#0073BB" stopOpacity="0.4"/>
-                <stop offset="70%" stopColor="#FF9900" stopOpacity="0.4"/>
-                <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.9"/>
-              </linearGradient>
-            </defs>
-
-            {/* Base fill */}
-            <path 
-              d="M 130,270 Q 30,270 30,195 Q 30,145 75,128 Q 72,118 72,108 Q 72,68 110,55 Q 130,48 152,56 Q 168,28 200,22 Q 235,15 258,38 Q 278,16 312,18 Q 350,20 362,52 Q 385,42 408,52 Q 440,62 442,98 Q 442,110 436,122 Q 488,138 488,192 Q 488,270 388,270 Z" 
-              fill="url(#cloudFill)" 
-            />
-            
-            {/* Orange glow */}
-            <path 
-              d="M 130,270 Q 30,270 30,195 Q 30,145 75,128 Q 72,118 72,108 Q 72,68 110,55 Q 130,48 152,56 Q 168,28 200,22 Q 235,15 258,38 Q 278,16 312,18 Q 350,20 362,52 Q 385,42 408,52 Q 440,62 442,98 Q 442,110 436,122 Q 488,138 488,192 Q 488,270 388,270 Z" 
-              fill="url(#cloudGlow)" 
-            />
-            
-            {/* Blue glow */}
-            <path 
-              d="M 130,270 Q 30,270 30,195 Q 30,145 75,128 Q 72,118 72,108 Q 72,68 110,55 Q 130,48 152,56 Q 168,28 200,22 Q 235,15 258,38 Q 278,16 312,18 Q 350,20 362,52 Q 385,42 408,52 Q 440,62 442,98 Q 442,110 436,122 Q 488,138 488,192 Q 488,270 388,270 Z" 
-              fill="url(#cloudGlowBlue)" 
-            />
-            
-            {/* Outline */}
-            <path 
-              d="M 130,270 Q 30,270 30,195 Q 30,145 75,128 Q 72,118 72,108 Q 72,68 110,55 Q 130,48 152,56 Q 168,28 200,22 Q 235,15 258,38 Q 278,16 312,18 Q 350,20 362,52 Q 385,42 408,52 Q 440,62 442,98 Q 442,110 436,122 Q 488,138 488,192 Q 488,270 388,270 Z" 
-              fill="none" 
-              stroke="url(#strokeGrad)" 
-              strokeWidth="2.5" 
-              strokeLinejoin="round" 
-              strokeLinecap="round" 
-            />
-          </svg>
+          {/* Spotlight Glows inside the Card */}
+          <div
+            style={{
+              position: "absolute",
+              bottom: "-10%",
+              right: "-10%",
+              width: "280px",
+              height: "280px",
+              borderRadius: "50%",
+              background: "radial-gradient(circle, rgba(255, 153, 0, 0.22) 0%, transparent 70%)",
+              pointerEvents: "none",
+              zIndex: 1,
+            }}
+          />
+          <div
+            style={{
+              position: "absolute",
+              top: "-10%",
+              left: "-10%",
+              width: "280px",
+              height: "280px",
+              borderRadius: "50%",
+              background: "radial-gradient(circle, rgba(0, 115, 187, 0.16) 0%, transparent 70%)",
+              pointerEvents: "none",
+              zIndex: 1,
+            }}
+          />
 
           {/* Text Content */}
           <div 
             style={{ 
               position: "relative", 
               zIndex: 10, 
-              width: "80%", 
-              height: "70%",
+              width: "85%", 
+              height: "75%",
               perspective: "800px",
               perspectiveOrigin: "center center",
             }}
