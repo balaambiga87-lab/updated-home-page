@@ -10,7 +10,7 @@ const CARDS = [
     sublabel: "120+ builders · Oct 2025 · 24 hours",
     emoji: "☁",
     image: "/images/cloud_jam.jpg",
-    description: "An intensive cloud computing hackathon challenge where student builders collaborate in teams to architect, deploy, and scale innovative solutions on AWS. A true 24-hour sprint from concept to a production-ready application.",
+    description: "A beginner-friendly cloud computing session focused on cloud fundamentals, industry-recognized certifications, career opportunities, and structured learning roadmaps.",
   },
   {
     gradient: "linear-gradient(135deg,#0073BB,#005f9e)",
@@ -18,7 +18,7 @@ const CARDS = [
     sublabel: "Bedrock & LLMs · Feb 2026",
     emoji: "🤖",
     image: "/images/ai_workshop.jpg",
-    description: "A comprehensive generative AI hands-on session focusing on Amazon Bedrock. Students explored building applications using large language models (LLMs), prompt engineering, and building agentic assistants.",
+    description: "A beginner-friendly cloud computing session focused on cloud fundamentals, industry-recognized certifications, career opportunities, and structured learning roadmaps.",
   },
   {
     gradient: "linear-gradient(135deg,#FF9900,#E68900)",
@@ -26,7 +26,7 @@ const CARDS = [
     sublabel: "150+ members · Networking",
     emoji: "🎤",
     image: "/images/community_meetup.jpg",
-    description: "A community gathering bringing together cloud practitioners, student developers, and tech professionals to network, share case studies, and discuss the latest industry innovations.",
+    description: "A collaborative gathering where students, developers, and tech enthusiasts connected, shared knowledge, and built meaningful professional networks.",
   },
   {
     gradient: "linear-gradient(135deg,#1A222D,#232F3E)",
@@ -34,7 +34,7 @@ const CARDS = [
     sublabel: "100+ students certified",
     emoji: "🎤",
     image: "/images/bootcamp.jpg",
-    description: "A focused interactive workspace session where students collaborated on preparation for AWS certifications, shared learnings from technical bootcamps, and engaged in peer mentoring.",
+    description: "A collaborative gathering where students, developers, and tech enthusiasts connected, shared knowledge, and built meaningful professional networks.",
   },
   {
     gradient: "linear-gradient(135deg,#005f9e,#0073BB)",
@@ -42,7 +42,7 @@ const CARDS = [
     sublabel: "re:Invent Watch Party",
     emoji: "💡",
     image: "/images/ai_workshop.jpg",
-    description: "An expert panel discussion and watch party highlighting the most exciting announcements and technical breakthroughs from AWS re:Invent, sharing actionable insights for developers.",
+    description: "A beginner-friendly cloud computing session focused on cloud fundamentals, industry-recognized certifications, career opportunities, and structured learning roadmaps.",
   },
   {
     gradient: "linear-gradient(135deg,#232F3E,#1A222D)",
