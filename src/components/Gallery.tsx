@@ -6,14 +6,14 @@ import { motion, AnimatePresence } from "framer-motion";
 const CARDS = [
   {
     gradient: "linear-gradient(135deg,#232F3E,#3a5068)",
-    label: "☁ Cloud Jam Hackathon",
+    label: "☁ Cloud Matrix Hackathon",
     sublabel: "120+ builders · Oct 2025 · 24 hours",
     emoji: "☁",
     image: "/images/cloud_jam.jpg",
   },
   {
     gradient: "linear-gradient(135deg,#0073BB,#005f9e)",
-    label: "🤖 Generative AI Workshop",
+    label: "🤖 Cloud Matrix",
     sublabel: "Bedrock & LLMs · Feb 2026",
     emoji: "🤖",
     image: "/images/ai_workshop.jpg",
