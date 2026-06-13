@@ -10,6 +10,7 @@ const CARDS = [
     sublabel: "120+ builders · Oct 2025 · 24 hours",
     emoji: "☁",
     image: "/images/cloud_jam.jpg",
+    description: "An intensive cloud computing hackathon challenge where student builders collaborate in teams to architect, deploy, and scale innovative solutions on AWS. A true 24-hour sprint from concept to a production-ready application.",
   },
   {
     gradient: "linear-gradient(135deg,#0073BB,#005f9e)",
@@ -17,6 +18,7 @@ const CARDS = [
     sublabel: "Bedrock & LLMs · Feb 2026",
     emoji: "🤖",
     image: "/images/ai_workshop.jpg",
+    description: "A comprehensive generative AI hands-on session focusing on Amazon Bedrock. Students explored building applications using large language models (LLMs), prompt engineering, and building agentic assistants.",
   },
   {
     gradient: "linear-gradient(135deg,#FF9900,#E68900)",
@@ -24,6 +26,7 @@ const CARDS = [
     sublabel: "150+ members · Networking",
     emoji: "🎤",
     image: "/images/community_meetup.jpg",
+    description: "A community gathering bringing together cloud practitioners, student developers, and tech professionals to network, share case studies, and discuss the latest industry innovations.",
   },
   {
     gradient: "linear-gradient(135deg,#1A222D,#232F3E)",
@@ -31,6 +34,7 @@ const CARDS = [
     sublabel: "100+ students certified",
     emoji: "🎤",
     image: "/images/bootcamp.jpg",
+    description: "A focused interactive workspace session where students collaborated on preparation for AWS certifications, shared learnings from technical bootcamps, and engaged in peer mentoring.",
   },
   {
     gradient: "linear-gradient(135deg,#005f9e,#0073BB)",
@@ -38,6 +42,7 @@ const CARDS = [
     sublabel: "re:Invent Watch Party",
     emoji: "💡",
     image: "/images/ai_workshop.jpg",
+    description: "An expert panel discussion and watch party highlighting the most exciting announcements and technical breakthroughs from AWS re:Invent, sharing actionable insights for developers.",
   },
   {
     gradient: "linear-gradient(135deg,#232F3E,#1A222D)",
@@ -45,6 +50,7 @@ const CARDS = [
     sublabel: "Robotics & IoT Showcase · Dobot Magician",
     emoji: "🤖",
     image: "/images/robo_wolke.jpg",
+    description: "An experimental robotics exhibition demonstrating the integration of cloud computing with physical hardware. The showcase highlighted controlling Dobot Magician robotic arms using AWS-backed cloud services.",
   },
 ];
 
@@ -445,26 +451,12 @@ export default function Gallery() {
               initial={{ opacity: 0, x: 24 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.35, ease: "easeOut" }}
-              style={{ display: "flex", flexDirection: "column", gap: 24 }}
+              style={{ display: "flex", flexDirection: "column", gap: 20 }}
             >
-              {/* Big faded card number */}
-              <div
-                style={{
-                  fontSize: 72,
-                  fontWeight: 900,
-                  color: "rgba(35,47,62,0.06)",
-                  lineHeight: 1,
-                  letterSpacing: "-0.04em",
-                  userSelect: "none",
-                }}
-              >
-                {String(order[0] + 1).padStart(2, "0")}
-              </div>
-
               <div>
                 <div
                   style={{
-                    fontSize: 22,
+                    fontSize: 24,
                     fontWeight: 800,
                     color: "#1e2d3d",
                     marginBottom: 8,
@@ -475,13 +467,26 @@ export default function Gallery() {
                 </div>
                 <div
                   style={{
-                    fontSize: 14,
-                    color: "#4b5563",
-                    lineHeight: 1.65,
+                    fontSize: 13,
+                    fontWeight: 700,
+                    color: "#FF9900",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.05em",
+                    marginBottom: 16,
                   }}
                 >
                   {currentTopCard.sublabel}
                 </div>
+                <p
+                  style={{
+                    fontSize: 15,
+                    color: "#4b5563",
+                    lineHeight: 1.65,
+                    margin: 0,
+                  }}
+                >
+                  {currentTopCard.description}
+                </p>
               </div>
 
               {/* Dot progress indicators */}
