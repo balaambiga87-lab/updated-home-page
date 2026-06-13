@@ -257,7 +257,7 @@ export default function Gallery() {
             display: "grid",
             gridTemplateColumns: "1.1fr 1fr",
             gap: 64,
-            alignItems: "center",
+            alignItems: "flex-start",
           }}
         >
           {/* ── LEFT column: the card deck ───────────────────────────── */}
@@ -425,7 +425,7 @@ export default function Gallery() {
                   fontSize: "clamp(1.8rem, 3vw, 2.4rem)",
                   fontWeight: 900,
                   color: "#1e2d3d",
-                  marginBottom: 8,
+                  margin: "0 0 8px 0",
                   letterSpacing: "-0.01em",
                 }}
               >
