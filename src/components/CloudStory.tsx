@@ -109,12 +109,23 @@ void main() {
   float norm = 0.5;
   vec3 newpos = position;
   float offset = (dot(distortionAxis, position) + norm / 2.) / norm;
+  
+  float absProgress = abs(uPosition);
+  float signProgress = uPosition < 0.0 ? -1.0 : (uPosition > 0.0 ? 1.0 : 0.0);
+  
+  // Calculate localprogress with distortion offset
   float localprogress = clamp(
-    (fract(uPosition * 5.0 * 0.01) - 0.01 * uDistortion * offset) / (1. - 0.01 * uDistortion),
+    (absProgress - 0.01 * uDistortion * offset) / (1. - 0.01 * uDistortion),
     0.,
-    2.
+    1.
   );
-  localprogress = qinticInOut(localprogress) * PI;
+  
+  // Ensure that when absProgress is exactly 0.0, localprogress is exactly 0.0
+  // to make the card perfectly flat when active.
+  localprogress = localprogress * smoothstep(0.0, 0.15, absProgress);
+  
+  // Apply sign and ease
+  localprogress = qinticInOut(localprogress) * signProgress * PI;
   newpos = rotate(newpos, rotationAxis, localprogress);
 
   gl_Position = projectionMatrix * modelViewMatrix * vec4(newpos, 1.0);
@@ -297,27 +308,16 @@ class Media {
     this.padding = 20;
     this.height = this.plane.scale.y + (this.viewport.height * this.padding) / this.screen.height;
     this.heightTotal = this.height * this.length;
-    this.y = -this.heightTotal / 2 + (this.index + 0.5) * this.height;
+    this.y = this.index * this.height;
   }
 
   update(scroll: ScrollState) {
-    this.plane.position.y = this.y - scroll.current - this.extra;
-    const position = map(this.plane.position.y, -this.viewport.height, this.viewport.height, 5, 15);
+    this.plane.position.y = this.y - scroll.current;
+    const position = this.plane.position.y / this.height;
 
     this.program.uniforms.uPosition.value = position;
     this.program.uniforms.uTime.value += 0.04;
     this.program.uniforms.uSpeed.value = scroll.current;
-
-    const planeHeight = this.plane.scale.y;
-    const viewportHeight = this.viewport.height;
-    const topEdge = this.plane.position.y + planeHeight / 2;
-    const bottomEdge = this.plane.position.y - planeHeight / 2;
-
-    if (topEdge < -viewportHeight / 2) {
-      this.extra -= this.heightTotal;
-    } else if (bottomEdge > viewportHeight / 2) {
-      this.extra += this.heightTotal;
-    }
   }
 }
 
