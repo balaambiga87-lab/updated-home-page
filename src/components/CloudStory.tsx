@@ -181,7 +181,7 @@ function AutoBind(self: any, { include, exclude }: AutoBindOptions = {}) {
     return true;
   };
 
-  for (const [object, key] of getAllProperties(self.constructor.prototype)) {
+  for (const [object, key] of Array.from(getAllProperties(self.constructor.prototype))) {
     if (key === 'constructor' || !filter(key)) continue;
     const descriptor = Reflect.getOwnPropertyDescriptor(object, key);
     if (descriptor && typeof descriptor.value === 'function') {
@@ -671,68 +671,95 @@ const generateSlideImage = (title: string, desc: string): string => {
   ctx.roundRect(2.5, 2.5, width - 5, height - 5, radius - 2.5);
   ctx.stroke();
 
-  // 4. Orange accent line
-  ctx.fillStyle = "#FF9900";
-  ctx.beginPath();
-  ctx.roundRect(width / 2 - 32, 100, 64, 4, 4);
-  ctx.fill();
-
-  // 5. Title
-  ctx.fillStyle = "#232F3E";
-  ctx.font = "800 44px system-ui, -apple-system, sans-serif";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillText(title, width / 2, 160);
-
-  // 6. Wrapped Description
-  ctx.fillStyle = "#4b5563";
-  ctx.font = "500 28px system-ui, -apple-system, sans-serif";
-  
+  // 4. Wrap description text and measure to compute dynamic Y centering
+  ctx.font = "500 36px system-ui, -apple-system, sans-serif";
   const words = desc.split(" ");
   const lines: string[] = [];
   let currentLine = "";
-  const maxWidth = 760;
+  const maxDescWidth = 840;
 
   for (let i = 0; i < words.length; i++) {
     const testLine = currentLine + words[i] + " ";
     const metrics = ctx.measureText(testLine);
-    if (metrics.width > maxWidth && i > 0) {
-      lines.push(currentLine);
+    if (metrics.width > maxDescWidth && i > 0) {
+      lines.push(currentLine.trim());
       currentLine = words[i] + " ";
     } else {
       currentLine = testLine;
     }
   }
-  lines.push(currentLine);
+  lines.push(currentLine.trim());
 
-  const startY = 250;
-  const lineHeight = 44;
-  ctx.textBaseline = "top";
-  for (let i = 0; i < lines.length; i++) {
-    ctx.fillText(lines[i].trim(), width / 2, startY + i * lineHeight);
-  }
+  const descLineHeight = 52;
+  const descHeight = lines.length * descLineHeight;
 
-  // 7. Badge
-  const badgeText = "AWS SBG REC";
-  ctx.font = "bold 20px system-ui, -apple-system, sans-serif";
-  const badgeMetrics = ctx.measureText(badgeText);
-  const badgeW = badgeMetrics.width + 48;
-  const badgeH = 40;
-  const badgeX = width / 2 - badgeW / 2;
-  const badgeY = height - 120;
+  // Title and Accent configurations
+  const titleHeight = 60;
+  const accentHeight = 4;
+  const badgeH = 46;
 
-  ctx.fillStyle = "rgba(35,47,62,.06)";
+  // Spacing offsets
+  const accentToTitleGap = 16;
+  const titleToDescGap = 36;
+  const descToBadgeGap = 48;
+
+  // Calculate total content height
+  const totalContentHeight = 
+    accentHeight + 
+    accentToTitleGap + 
+    titleHeight + 
+    titleToDescGap + 
+    descHeight + 
+    descToBadgeGap + 
+    badgeH;
+
+  // Center vertically
+  const startY = (height - totalContentHeight) / 2;
+
+  // 5. Render Orange Accent Line
+  ctx.fillStyle = "#FF9900";
   ctx.beginPath();
-  ctx.roundRect(badgeX, badgeY, badgeW, badgeH, 20);
+  ctx.roundRect(width / 2 - 32, startY, 64, accentHeight, 2);
   ctx.fill();
 
-  ctx.strokeStyle = "rgba(35,47,62,.1)";
+  // 6. Render Title
+  ctx.fillStyle = "#232F3E";
+  ctx.font = "800 56px system-ui, -apple-system, sans-serif";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "top";
+  const titleY = startY + accentHeight + accentToTitleGap;
+  ctx.fillText(title, width / 2, titleY);
+
+  // 7. Render Description
+  ctx.fillStyle = "#4b5563";
+  ctx.font = "500 36px system-ui, -apple-system, sans-serif";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "top";
+  const descStartY = titleY + titleHeight + titleToDescGap;
+  for (let i = 0; i < lines.length; i++) {
+    ctx.fillText(lines[i], width / 2, descStartY + i * descLineHeight);
+  }
+
+  // 8. Render Badge
+  const badgeText = "AWS SBG REC";
+  ctx.font = "bold 24px system-ui, -apple-system, sans-serif";
+  const badgeMetrics = ctx.measureText(badgeText);
+  const badgeW = badgeMetrics.width + 48;
+  const badgeStartY = descStartY + descHeight + descToBadgeGap;
+  const badgeX = width / 2 - badgeW / 2;
+
+  ctx.fillStyle = "rgba(35, 47, 62, 0.06)";
+  ctx.beginPath();
+  ctx.roundRect(badgeX, badgeStartY, badgeW, badgeH, 23);
+  ctx.fill();
+
+  ctx.strokeStyle = "rgba(35, 47, 62, 0.1)";
   ctx.lineWidth = 2;
   ctx.stroke();
 
   ctx.fillStyle = "#232F3E";
   ctx.textBaseline = "middle";
-  ctx.fillText(badgeText, width / 2, badgeY + badgeH / 2);
+  ctx.fillText(badgeText, width / 2, badgeStartY + badgeH / 2);
 
   return canvas.toDataURL("image/png");
 };
@@ -759,18 +786,25 @@ export default function CloudStory() {
     const parentContainer = canvasRef.current.parentElement;
     if (!parentContainer) return;
 
-    const canvasInstance = new Canvas({
-      container: parentContainer,
-      canvas: canvasRef.current,
-      items: slideImages,
-      distortion: 3,
-      scrollEase: 0.05,
-      cameraFov: 45,
-      cameraZ: 20,
-      onIndexChange: (idx) => {
-        setIndex(idx);
-      }
-    });
+    let canvasInstance: Canvas | null = null;
+
+    try {
+      canvasInstance = new Canvas({
+        container: parentContainer,
+        canvas: canvasRef.current,
+        items: slideImages,
+        distortion: 3,
+        scrollEase: 0.05,
+        cameraFov: 45,
+        cameraZ: 20,
+        onIndexChange: (idx) => {
+          setIndex(idx);
+        }
+      });
+    } catch (err) {
+      console.warn("CloudStory: WebGL init failed, skipping.", err);
+      return;
+    }
 
     instanceRef.current = canvasInstance;
 
@@ -781,21 +815,30 @@ export default function CloudStory() {
 
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
-      canvasInstance.onWheel(e);
+      canvasInstance!.onWheel(e);
     };
 
     const handleTouchMove = (e: TouchEvent) => {
       e.preventDefault();
     };
 
+    // Stop animation loop immediately when WebGL context is lost (e.g. during Fast Refresh)
+    const handleContextLost = (e: Event) => {
+      e.preventDefault();
+      canvasInstance!.destroy();
+      instanceRef.current = null;
+    };
+
     const canvasEl = canvasRef.current;
     canvasEl.addEventListener('wheel', handleWheel, { passive: false });
     canvasEl.addEventListener('touchmove', handleTouchMove, { passive: false });
+    canvasEl.addEventListener('webglcontextlost', handleContextLost);
 
     return () => {
-      canvasInstance.destroy();
+      canvasInstance!.destroy();
       canvasEl.removeEventListener('wheel', handleWheel);
       canvasEl.removeEventListener('touchmove', handleTouchMove);
+      canvasEl.removeEventListener('webglcontextlost', handleContextLost);
       instanceRef.current = null;
     };
   }, [slideImages]);

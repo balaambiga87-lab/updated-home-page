@@ -1,6 +1,7 @@
 "use client";
 import { useRef } from "react";
 import { motion, useInView, useMotionValue, useSpring } from "framer-motion";
+import CloudStory from "./CloudStory";
 
 const EVENTS_DATA = [
   {
@@ -273,6 +274,32 @@ export default function Events() {
               </motion.div>
             );
           })}
+        </div>
+      </div>
+
+      {/* CloudStory Section */}
+      <div style={{ 
+        width: "100%", 
+        maxWidth: "1200px", 
+        margin: "64px auto 0", 
+        padding: "0 44px", 
+        display: "flex", 
+        flexDirection: "column", 
+        alignItems: "center", 
+        position: "relative" 
+      }}>
+        {/* Mini header for the stories slider */}
+        <div style={{ textAlign: "center", marginBottom: "32px" }}>
+          <h3 style={{ fontSize: "20px", fontWeight: 800, color: "#1e2d3d", marginBottom: "8px" }}>
+            Explore Our Community Values & Journey
+          </h3>
+          <p style={{ fontSize: "14px", color: "#4b5563", margin: 0 }}>
+            Interact with the 3D book pages below to learn more about the student builders.
+          </p>
+        </div>
+
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "100%", position: "relative" }}>
+          <CloudStory />
         </div>
       </div>
     </section>

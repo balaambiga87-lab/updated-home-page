@@ -2,8 +2,9 @@ import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import Domains from "@/components/Domains";
 import About from "@/components/About";
-import Features from "@/components/Features";
+import OurTeamShowcase from "@/components/CommunityStoryCarousel";
 import Gallery from "@/components/Gallery";
+import ReviewsMarquee from "@/components/ReviewsMarquee";
 
 import Events from "@/components/Events";
 import CTA from "@/components/CTA";
@@ -17,9 +18,10 @@ export default function Home() {
         <Hero />
         <Domains />
         <About />
-        <Features />
+        <OurTeamShowcase />
         <Gallery />
-
+        <ReviewsMarquee />
+        
         <Events />
         <CTA />
       </main>

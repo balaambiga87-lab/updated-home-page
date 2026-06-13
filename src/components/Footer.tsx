@@ -2,9 +2,29 @@
 import { motion } from "framer-motion";
 
 const COLS = [
-  { h: "Platform", links: ["Courses", "Events", "Gallery", "Certifications"] },
-  { h: "Resources", links: ["Roadmaps", "Quiz Arena", "Channels", "Blog"] },
-  { h: "Connect", links: ["Instagram", "LinkedIn"] },
+  {
+    h: "Platform",
+    links: [
+      { label: "Home", href: "/#home" },
+      { label: "About Us", href: "/#about" },
+      { label: "Events", href: "/#events" },
+      { label: "Gallery", href: "/#gallery" }
+    ]
+  },
+  {
+    h: "Resources",
+    links: [
+      { label: "Our Team", href: "/community-story" },
+      { label: "Community", href: "/#community" }
+    ]
+  },
+  {
+    h: "Connect",
+    links: [
+      { label: "Instagram", href: "#" },
+      { label: "LinkedIn", href: "#" }
+    ]
+  },
 ];
 
 export default function Footer() {
@@ -133,8 +153,8 @@ export default function Footer() {
               </h4>
               {col.links.map((link) => (
                 <motion.a
-                  key={link}
-                  href="#"
+                  key={link.label}
+                  href={link.href}
                   whileHover={{ color: "#FF9900", x: 4 }}
                   transition={{ duration: 0.18, ease: "easeOut" }}
                   style={{
@@ -147,7 +167,7 @@ export default function Footer() {
                     cursor: "pointer",
                   }}
                 >
-                  {link}
+                  {link.label}
                 </motion.a>
               ))}
             </div>

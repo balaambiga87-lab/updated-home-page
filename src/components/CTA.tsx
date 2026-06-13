@@ -211,7 +211,7 @@ export default function CTA() {
 
           {/* Secondary Button */}
           <motion.a
-            href="#features"
+            href="#gallery"
             whileHover={{ background: "rgba(255, 255, 255, 0.08)", y: -2 }}
             whileTap={{ scale: 0.96 }}
             style={{
@@ -230,7 +230,7 @@ export default function CTA() {
               transition: "all 0.2s ease",
             }}
           >
-            Explore Features ↓
+            Explore Gallery ↓
           </motion.a>
         </motion.div>
       </div>

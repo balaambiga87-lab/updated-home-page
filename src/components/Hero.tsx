@@ -94,8 +94,7 @@ export default function Hero() {
       {/* Main Container */}
       <motion.div
         whileHover={{
-          boxShadow: "0 30px 80px rgba(15,23,42,0.12)",
-          boxShadowInner: "inset 0 0 30px rgba(255,255,255,0.8)"
+          boxShadow: "0 30px 80px rgba(15,23,42,0.12), inset 0 0 30px rgba(255,255,255,0.8)"
         }}
         transition={{ duration: 0.4 }}
         style={{

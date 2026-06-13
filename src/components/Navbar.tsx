@@ -1,14 +1,14 @@
 "use client";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { usePathname } from "next/navigation";
 
 const LINKS = [
   { label: "Home", href: "#home" },
   { label: "About", href: "#about" },
-  { label: "Features", href: "#features" },
   { label: "Gallery", href: "#gallery" },
   { label: "Events", href: "#events" },
-  { label: "Community", href: "#community" }
+  { label: "Team", href: "/community-story" }
 ];
 
 export default function Navbar() {
@@ -16,6 +16,8 @@ export default function Navbar() {
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
   const [isMobile, setIsMobile] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const pathname = usePathname();
+  const isHome = pathname === "/";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -187,7 +189,7 @@ export default function Navbar() {
               {LINKS.map((link, idx) => (
                 <a
                   key={link.label}
-                  href={link.href}
+                  href={isHome ? link.href : (link.href.startsWith("#") ? `/${link.href}` : link.href)}
                   onMouseEnter={() => setHoveredIdx(idx)}
                   onMouseLeave={() => setHoveredIdx(null)}
                   style={{
@@ -331,7 +333,7 @@ export default function Navbar() {
                 {LINKS.map((link) => (
                   <a
                     key={link.label}
-                    href={link.href}
+                    href={isHome ? link.href : (link.href.startsWith("#") ? `/${link.href}` : link.href)}
                     onClick={() => setMobileMenuOpen(false)}
                     style={{
                       fontSize: "14px",
