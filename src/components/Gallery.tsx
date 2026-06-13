@@ -27,14 +27,14 @@ const CARDS = [
   },
   {
     gradient: "linear-gradient(135deg,#1A222D,#232F3E)",
-    label: "🏆 Certification Bootcamp",
+    label: "🎤 Community Meetup",
     sublabel: "100+ students certified",
-    emoji: "🏆",
+    emoji: "🎤",
     image: "/images/bootcamp.jpg",
   },
   {
     gradient: "linear-gradient(135deg,#005f9e,#0073BB)",
-    label: "💡 Gen AI Panel Discussion",
+    label: "💡 Cloud Matrix Event",
     sublabel: "re:Invent Watch Party",
     emoji: "💡",
     image: "/images/ai_workshop.jpg",
