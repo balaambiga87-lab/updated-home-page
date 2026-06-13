@@ -99,26 +99,36 @@ export default function CloudStory() {
   const [index, setIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
   const [direction, setDirection] = useState(1);
+  const [isFlipping, setIsFlipping] = useState(false);
 
   const totalSlides = STORIES.length;
 
   const nextSlide = () => {
+    if (isFlipping) return;
+    setIsFlipping(true);
     setDirection(1);
     setIndex((prev) => (prev === totalSlides - 1 ? 0 : prev + 1));
+    setTimeout(() => setIsFlipping(false), 500);
   };
 
   const prevSlide = () => {
+    if (isFlipping) return;
+    setIsFlipping(true);
     setDirection(-1);
     setIndex((prev) => (prev === 0 ? totalSlides - 1 : prev - 1));
+    setTimeout(() => setIsFlipping(false), 500);
   };
 
   useEffect(() => {
-    if (isHovered) return;
+    if (isHovered || isFlipping) return;
     const timer = setInterval(() => {
-      nextSlide();
+      setIsFlipping(true);
+      setDirection(1);
+      setIndex((prev) => (prev === totalSlides - 1 ? 0 : prev + 1));
+      setTimeout(() => setIsFlipping(false), 500);
     }, 5000);
     return () => clearInterval(timer);
-  }, [isHovered, index]);
+  }, [isHovered, isFlipping, index]);
 
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
@@ -127,20 +137,52 @@ export default function CloudStory() {
     };
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
-  }, [index]);
+  }, [index, isFlipping]);
 
-  const variants = {
+  const pageVariants = {
     enter: (dir: number) => ({
-      x: dir > 0 ? 60 : -60,
+      rotateY: dir > 0 ? 90 : -90,
       opacity: 0,
+      scale: 0.9,
+      transformOrigin: dir > 0 ? "left center" : "right center",
     }),
     center: {
-      x: 0,
+      rotateY: 0,
       opacity: 1,
+      scale: 1,
+      transformOrigin: "center center",
+      transition: {
+        rotateY: {
+          type: "spring",
+          stiffness: 180,
+          damping: 22,
+        },
+        opacity: {
+          duration: 0.25,
+          ease: "easeIn",
+        },
+        scale: {
+          type: "spring",
+          stiffness: 180,
+          damping: 22,
+        },
+      },
     },
     exit: (dir: number) => ({
-      x: dir > 0 ? -60 : 60,
+      rotateY: dir > 0 ? -90 : 90,
       opacity: 0,
+      scale: 0.88,
+      transformOrigin: dir > 0 ? "right center" : "left center",
+      transition: {
+        rotateY: {
+          duration: 0.3,
+          ease: [0.4, 0, 1, 1],
+        },
+        opacity: {
+          duration: 0.18,
+          ease: "easeIn",
+        },
+      },
     }),
   };
 
@@ -196,147 +238,182 @@ export default function CloudStory() {
             filter: "drop-shadow(0 24px 32px rgba(35, 47, 62, 0.12))",
           }}
         >
-        {/* NEW SINGLE SVG CLOUD (Wide and Flat) */}
-              <svg 
-                viewBox="0 0 520 320"
-                style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }}
-                xmlns="http://www.w3.org/2000/svg"
+          {/* NEW SINGLE SVG CLOUD (Wide and Flat) */}
+          <svg 
+            viewBox="0 0 520 320"
+            style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }}
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <defs>
+              <linearGradient id="cloudFill" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#FFFFFF" stopOpacity="1"/>
+                <stop offset="25%" stopColor="#E8F4FD" stopOpacity=".75"/>
+                <stop offset="60%" stopColor="#FFF3E0" stopOpacity=".70"/>
+                <stop offset="100%" stopColor="#FFFFFF" stopOpacity="1"/>
+              </linearGradient>
+
+              <radialGradient id="cloudGlow" cx="72%" cy="80%" r="38%">
+                <stop offset="0%" stopColor="#FF9900" stopOpacity=".22"/>
+                <stop offset="100%" stopColor="#FF9900" stopOpacity="0"/>
+              </radialGradient>
+
+              <radialGradient id="cloudGlowBlue" cx="28%" cy="22%" r="35%">
+                <stop offset="0%" stopColor="#0073BB" stopOpacity=".16"/>
+                <stop offset="100%" stopColor="#0073BB" stopOpacity="0"/>
+              </radialGradient>
+
+              <linearGradient id="strokeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.9"/>
+                <stop offset="40%" stopColor="#0073BB" stopOpacity="0.4"/>
+                <stop offset="70%" stopColor="#FF9900" stopOpacity="0.4"/>
+                <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.9"/>
+              </linearGradient>
+            </defs>
+
+            {/* Base fill */}
+            <path 
+              d="M 130,270 Q 30,270 30,195 Q 30,145 75,128 Q 72,118 72,108 Q 72,68 110,55 Q 130,48 152,56 Q 168,28 200,22 Q 235,15 258,38 Q 278,16 312,18 Q 350,20 362,52 Q 385,42 408,52 Q 440,62 442,98 Q 442,110 436,122 Q 488,138 488,192 Q 488,270 388,270 Z" 
+              fill="url(#cloudFill)" 
+            />
+            
+            {/* Orange glow */}
+            <path 
+              d="M 130,270 Q 30,270 30,195 Q 30,145 75,128 Q 72,118 72,108 Q 72,68 110,55 Q 130,48 152,56 Q 168,28 200,22 Q 235,15 258,38 Q 278,16 312,18 Q 350,20 362,52 Q 385,42 408,52 Q 440,62 442,98 Q 442,110 436,122 Q 488,138 488,192 Q 488,270 388,270 Z" 
+              fill="url(#cloudGlow)" 
+            />
+            
+            {/* Blue glow */}
+            <path 
+              d="M 130,270 Q 30,270 30,195 Q 30,145 75,128 Q 72,118 72,108 Q 72,68 110,55 Q 130,48 152,56 Q 168,28 200,22 Q 235,15 258,38 Q 278,16 312,18 Q 350,20 362,52 Q 385,42 408,52 Q 440,62 442,98 Q 442,110 436,122 Q 488,138 488,192 Q 488,270 388,270 Z" 
+              fill="url(#cloudGlowBlue)" 
+            />
+            
+            {/* Outline */}
+            <path 
+              d="M 130,270 Q 30,270 30,195 Q 30,145 75,128 Q 72,118 72,108 Q 72,68 110,55 Q 130,48 152,56 Q 168,28 200,22 Q 235,15 258,38 Q 278,16 312,18 Q 350,20 362,52 Q 385,42 408,52 Q 440,62 442,98 Q 442,110 436,122 Q 488,138 488,192 Q 488,270 388,270 Z" 
+              fill="none" 
+              stroke="url(#strokeGrad)" 
+              strokeWidth="2.5" 
+              strokeLinejoin="round" 
+              strokeLinecap="round" 
+            />
+          </svg>
+
+          {/* Text Content */}
+          <div 
+            style={{ 
+              position: "relative", 
+              zIndex: 10, 
+              width: "80%", 
+              height: "70%",
+              perspective: "800px",
+              perspectiveOrigin: "center center",
+            }}
+          >
+            <AnimatePresence mode="wait" custom={direction}>
+              <motion.div
+                key={index}
+                custom={direction}
+                variants={pageVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                drag="x"
+                dragConstraints={{ left: 0, right: 0 }}
+                dragElastic={0.1}
+                onDragEnd={(e, info) => {
+                  if (info.offset.x < -50) nextSlide();
+                  if (info.offset.x > 50) prevSlide();
+                }}
+                style={{
+                  cursor: "default",
+                  position: "absolute",
+                  inset: 0,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  padding: "0 40px",
+                  transformStyle: "preserve-3d",
+                  backfaceVisibility: "hidden",
+                  WebkitBackfaceVisibility: "hidden",
+                }}
               >
-                <defs>
-                  <linearGradient id="cloudFill" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#FFFFFF" stopOpacity="1"/>
-                    <stop offset="25%" stopColor="#E8F4FD" stopOpacity=".75"/>
-                    <stop offset="60%" stopColor="#FFF3E0" stopOpacity=".70"/>
-                    <stop offset="100%" stopColor="#FFFFFF" stopOpacity="1"/>
-                  </linearGradient>
-
-                  <radialGradient id="cloudGlow" cx="72%" cy="80%" r="38%">
-                    <stop offset="0%" stopColor="#FF9900" stopOpacity=".22"/>
-                    <stop offset="100%" stopColor="#FF9900" stopOpacity="0"/>
-                  </radialGradient>
-
-                  <radialGradient id="cloudGlowBlue" cx="28%" cy="22%" r="35%">
-                    <stop offset="0%" stopColor="#0073BB" stopOpacity=".16"/>
-                    <stop offset="100%" stopColor="#0073BB" stopOpacity="0"/>
-                  </radialGradient>
-
-                  <linearGradient id="strokeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.9"/>
-                    <stop offset="40%" stopColor="#0073BB" stopOpacity="0.4"/>
-                    <stop offset="70%" stopColor="#FF9900" stopOpacity="0.4"/>
-                    <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.9"/>
-                  </linearGradient>
-                </defs>
-
-                {/* Base fill */}
-                <path 
-                  d="M 130,270 Q 30,270 30,195 Q 30,145 75,128 Q 72,118 72,108 Q 72,68 110,55 Q 130,48 152,56 Q 168,28 200,22 Q 235,15 258,38 Q 278,16 312,18 Q 350,20 362,52 Q 385,42 408,52 Q 440,62 442,98 Q 442,110 436,122 Q 488,138 488,192 Q 488,270 388,270 Z" 
-                  fill="url(#cloudFill)" 
+                <div
+                  style={{
+                    width: "32px",
+                    height: "2px",
+                    background: "#FF9900",
+                    borderRadius: "2px",
+                    margin: "0 auto 10px",
+                  }}
                 />
-                
-                {/* Orange glow */}
-                <path 
-                  d="M 130,270 Q 30,270 30,195 Q 30,145 75,128 Q 72,118 72,108 Q 72,68 110,55 Q 130,48 152,56 Q 168,28 200,22 Q 235,15 258,38 Q 278,16 312,18 Q 350,20 362,52 Q 385,42 408,52 Q 440,62 442,98 Q 442,110 436,122 Q 488,138 488,192 Q 488,270 388,270 Z" 
-                  fill="url(#cloudGlow)" 
-                />
-                
-                {/* Blue glow */}
-                <path 
-                  d="M 130,270 Q 30,270 30,195 Q 30,145 75,128 Q 72,118 72,108 Q 72,68 110,55 Q 130,48 152,56 Q 168,28 200,22 Q 235,15 258,38 Q 278,16 312,18 Q 350,20 362,52 Q 385,42 408,52 Q 440,62 442,98 Q 442,110 436,122 Q 488,138 488,192 Q 488,270 388,270 Z" 
-                  fill="url(#cloudGlowBlue)" 
-                />
-                
-                {/* Outline */}
-                <path 
-                  d="M 130,270 Q 30,270 30,195 Q 30,145 75,128 Q 72,118 72,108 Q 72,68 110,55 Q 130,48 152,56 Q 168,28 200,22 Q 235,15 258,38 Q 278,16 312,18 Q 350,20 362,52 Q 385,42 408,52 Q 440,62 442,98 Q 442,110 436,122 Q 488,138 488,192 Q 488,270 388,270 Z" 
-                  fill="none" 
-                  stroke="url(#strokeGrad)" 
-                  strokeWidth="2.5" 
-                  strokeLinejoin="round" 
-                  strokeLinecap="round" 
-                />
-              </svg>
+                <h3
+                  style={{
+                    fontSize: "22px",
+                    fontWeight: 800,
+                    color: "#232F3E",
+                    marginBottom: "12px",
+                    letterSpacing: "-0.02em",
+                    textAlign: "center"
+                  }}
+                >
+                  {STORIES[index].title}
+                </h3>
+                <p
+                  style={{
+                    fontSize: "14px",
+                    color: "#4b5563",
+                    lineHeight: 1.75,
+                    fontWeight: 500,
+                    textAlign: "center",
+                    maxWidth: "320px",
+                    margin: "0 auto"
+                  }}
+                >
+                  {STORIES[index].desc}
+                </p>
+                <div
+                  style={{
+                    marginTop: "14px",
+                    display: "inline-block",
+                    padding: "3px 12px",
+                    borderRadius: "100px",
+                    background: "rgba(35,47,62,.06)",
+                    border: "1px solid rgba(35,47,62,.1)",
+                    fontSize: "10px",
+                    fontWeight: 700,
+                    color: "#232F3E",
+                    letterSpacing: ".08em",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  AWS SBG REC
+                </div>
 
-              {/* Text Content */}
-              <div style={{ position: "relative", zIndex: 10, width: "80%", padding: "40px", textAlign: "center" }}>
-                <AnimatePresence mode="wait" custom={direction}>
-                  <motion.div
-                    key={index}
-                    custom={direction}
-                    variants={variants}
-                    initial="enter"
-                    animate="center"
-                    exit="exit"
-                    transition={{
-                      x: { type: "spring", stiffness: 220, damping: 24 },
-                      opacity: { duration: 0.2 },
-                    }}
-                    drag="x"
-                    dragConstraints={{ left: 0, right: 0 }}
-                    dragElastic={0.1}
-                    onDragEnd={(e, info) => {
-                      if (info.offset.x < -50) nextSlide();
-                      if (info.offset.x > 50) prevSlide();
-                    }}
-                    style={{ cursor: "default", width: "100%" }}
-                  >
-                    <div
-                      style={{
-                        width: "32px",
-                        height: "2px",
-                        background: "#FF9900",
-                        borderRadius: "2px",
-                        margin: "0 auto 10px",
-                      }}
-                    />
-                    <h3
-                      style={{
-                        fontSize: "22px",
-                        fontWeight: 800,
-                        color: "#232F3E",
-                        marginBottom: "12px",
-                        letterSpacing: "-0.02em",
-                        textAlign: "center"
-                      }}
-                    >
-                      {STORIES[index].title}
-                    </h3>
-                    <p
-                      style={{
-                        fontSize: "14px",
-                        color: "#4b5563",
-                        lineHeight: 1.75,
-                        fontWeight: 500,
-                        textAlign: "center",
-                        maxWidth: "320px",
-                        margin: "0 auto"
-                      }}
-                    >
-                      {STORIES[index].desc}
-                    </p>
-                    <div
-                      style={{
-                        marginTop: "14px",
-                        display: "inline-block",
-                        padding: "3px 12px",
-                        borderRadius: "100px",
-                        background: "rgba(35,47,62,.06)",
-                        border: "1px solid rgba(35,47,62,.1)",
-                        fontSize: "10px",
-                        fontWeight: 700,
-                        color: "#232F3E",
-                        letterSpacing: ".08em",
-                        textTransform: "uppercase",
-                      }}
-                    >
-                      AWS SBG REC
-                    </div>
-                  </motion.div>
-                </AnimatePresence>
-              </div>
-            </motion.div>
-          
-          <ArrowButton isLeft={false} hovered={isHovered} onClick={nextSlide} />
+                {/* Glare sweep during flip */}
+                <motion.div
+                  initial={{ opacity: 0, x: "-100%" }}
+                  animate={isFlipping
+                    ? { opacity: [0, 0.3, 0], x: ["-100%", "100%"] }
+                    : { opacity: 0 }
+                  }
+                  transition={{ duration: 0.4, ease: "easeInOut" }}
+                  style={{
+                    position: "absolute",
+                    inset: 0,
+                    background: "linear-gradient(105deg, transparent 25%, rgba(255,255,255,0.18) 50%, transparent 75%)",
+                    pointerEvents: "none",
+                    zIndex: 10,
+                    borderRadius: "inherit",
+                  }}
+                />
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        </motion.div>
+      
+        <ArrowButton isLeft={false} hovered={isHovered} onClick={nextSlide} />
       </div>
 
       {/* Navigation Dots */}
@@ -355,8 +432,11 @@ export default function CloudStory() {
             <button
               key={idx}
               onClick={() => {
+                if (isFlipping) return;
+                setIsFlipping(true);
                 setDirection(idx > index ? 1 : -1);
                 setIndex(idx);
+                setTimeout(() => setIsFlipping(false), 500);
               }}
               style={{
                 width: "8px",
