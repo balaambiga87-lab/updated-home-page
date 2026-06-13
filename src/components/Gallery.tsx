@@ -9,36 +9,42 @@ const CARDS = [
     label: "☁ Cloud Jam Hackathon",
     sublabel: "120+ builders · Oct 2025 · 24 hours",
     emoji: "☁",
+    image: "/images/cloud_jam.jpg",
   },
   {
     gradient: "linear-gradient(135deg,#0073BB,#005f9e)",
     label: "🤖 Generative AI Workshop",
     sublabel: "Bedrock & LLMs · Feb 2026",
     emoji: "🤖",
+    image: "/images/ai_workshop.jpg",
   },
   {
     gradient: "linear-gradient(135deg,#FF9900,#E68900)",
     label: "🎤 Community Meetup",
     sublabel: "150+ members · Networking",
     emoji: "🎤",
+    image: "/images/community_meetup.jpg",
   },
   {
     gradient: "linear-gradient(135deg,#1A222D,#232F3E)",
     label: "🏆 Certification Bootcamp",
     sublabel: "100+ students certified",
     emoji: "🏆",
+    image: "/images/bootcamp.jpg",
   },
   {
     gradient: "linear-gradient(135deg,#005f9e,#0073BB)",
     label: "💡 Gen AI Panel Discussion",
     sublabel: "re:Invent Watch Party",
     emoji: "💡",
+    image: "/images/ai_workshop.jpg",
   },
   {
     gradient: "linear-gradient(135deg,#232F3E,#1A222D)",
     label: "🚀 Annual Hackathon 2026",
     sublabel: "48 hours · 300+ participants",
     emoji: "🚀",
+    image: "/images/annual_hackathon.jpg",
   },
 ];
 
@@ -61,6 +67,31 @@ function CardFace({
 }) {
   return (
     <>
+      {/* Gradients for text and badge contrast */}
+      {card.image && (
+        <>
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              background: "linear-gradient(to top, rgba(15, 23, 42, 0.85) 0%, rgba(15, 23, 42, 0.2) 55%, transparent 100%)",
+              zIndex: 1,
+            }}
+          />
+          <div
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              height: "90px",
+              background: "linear-gradient(to bottom, rgba(15, 23, 42, 0.35) 0%, transparent 100%)",
+              zIndex: 1,
+            }}
+          />
+        </>
+      )}
+      
       {/* Dot-grid texture */}
       <div
         style={{
@@ -70,9 +101,10 @@ function CardFace({
             "radial-gradient(rgba(255,255,255,0.1) 1.5px, transparent 1.5px)",
           backgroundSize: "24px 24px",
           pointerEvents: "none",
-          zIndex: 0,
+          zIndex: 2,
         }}
       />
+
       {/* Watermark emoji */}
       <div
         style={{
@@ -81,15 +113,16 @@ function CardFace({
           left: "50%",
           transform: "translate(-50%,-58%)",
           fontSize: 100,
-          opacity: 0.12,
+          opacity: card.image ? 0.07 : 0.12,
           pointerEvents: "none",
           userSelect: "none",
           lineHeight: 1,
-          zIndex: 1,
+          zIndex: 2,
         }}
       >
         {card.emoji}
       </div>
+
       {/* Counter badge — top right */}
       <div
         style={{
@@ -110,6 +143,7 @@ function CardFace({
       >
         {String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
       </div>
+
       {/* Bottom label */}
       <div
         style={{
@@ -118,8 +152,9 @@ function CardFace({
           left: 0,
           right: 0,
           padding: "52px 28px 24px",
-          background:
-            "linear-gradient(to top, rgba(0,0,0,.72) 0%, transparent 100%)",
+          background: card.image 
+            ? "transparent" // scrim gradient handles this when image is present
+            : "linear-gradient(to top, rgba(0,0,0,.72) 0%, transparent 100%)",
           zIndex: 5,
         }}
       >
@@ -268,6 +303,34 @@ export default function Gallery() {
                     pointerEvents: "none",
                   }}
                 >
+                  {/* Photo background for stack depth */}
+                  {card.image && (
+                    <img
+                      src={card.image}
+                      alt={card.label}
+                      style={{
+                        position: "absolute",
+                        inset: 0,
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                        objectPosition: "center",
+                        zIndex: 0,
+                        opacity: isTop ? 1 : 0.75,
+                      }}
+                    />
+                  )}
+                  {/* Dimming shadow for cards deeper in stack */}
+                  {!isTop && (
+                    <div
+                      style={{
+                        position: "absolute",
+                        inset: 0,
+                        background: "rgba(15, 23, 42, 0.22)",
+                        zIndex: 1,
+                      }}
+                    />
+                  )}
                   {isTop && <CardFace card={card} index={cardIdx} total={N} />}
                 </motion.div>
               );
@@ -302,6 +365,21 @@ export default function Gallery() {
                     boxShadow: "0 24px 56px rgba(15,23,42,0.18)",
                   }}
                 >
+                  {CARDS[flyingIdx].image && (
+                    <img
+                      src={CARDS[flyingIdx].image}
+                      alt={CARDS[flyingIdx].label}
+                      style={{
+                        position: "absolute",
+                        inset: 0,
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                        objectPosition: "center",
+                        zIndex: 0,
+                      }}
+                    />
+                  )}
                   <CardFace
                     card={CARDS[flyingIdx]}
                     index={flyingIdx}
