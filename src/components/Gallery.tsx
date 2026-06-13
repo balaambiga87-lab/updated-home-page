@@ -41,10 +41,10 @@ const CARDS = [
   },
   {
     gradient: "linear-gradient(135deg,#232F3E,#1A222D)",
-    label: "🚀 Annual Hackathon 2026",
-    sublabel: "48 hours · 300+ participants",
-    emoji: "🚀",
-    image: "/images/annual_hackathon.jpg",
+    label: "🤖 Robo Wolke",
+    sublabel: "Robotics & IoT Showcase · Dobot Magician",
+    emoji: "🤖",
+    image: "/images/robo_wolke.jpg",
   },
 ];
 
