@@ -25,7 +25,7 @@ export default function ReviewsMarquee() {
       id="reviews"
       style={{
         width: "100vw",
-        background: "linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 50%, #F1F5F9 100%)",
+        background: "linear-gradient(180deg, #FFFDF9 0%, #FFFFFF 50%, #FFFDF9 100%)",
         padding: "60px 0 48px",
         position: "relative",
         overflow: "hidden",
@@ -34,8 +34,8 @@ export default function ReviewsMarquee() {
       }}
     >
       {/* Background Glows */}
-      <div style={{ position: "absolute", top: "-10%", left: "5%", width: "40vw", height: "40vw", borderRadius: "50%", background: "radial-gradient(circle,rgba(0,115,187,0.04) 0%,transparent 70%)", filter: "blur(80px)", pointerEvents: "none" }} />
-      <div style={{ position: "absolute", bottom: "-10%", right: "5%", width: "40vw", height: "40vw", borderRadius: "50%", background: "radial-gradient(circle,rgba(255,153,0,0.04) 0%,transparent 70%)", filter: "blur(80px)", pointerEvents: "none" }} />
+      <div style={{ position: "absolute", top: "-10%", left: "5%", width: "40vw", height: "40vw", borderRadius: "50%", background: "radial-gradient(circle,rgba(255,153,0,.08) 0%,transparent 70%)", filter: "blur(80px)", pointerEvents: "none" }} />
+      <div style={{ position: "absolute", bottom: "-10%", right: "5%", width: "40vw", height: "40vw", borderRadius: "50%", background: "radial-gradient(circle,rgba(255,153,0,0.08) 0%,transparent 70%)", filter: "blur(80px)", pointerEvents: "none" }} />
 
       {/* Header */}
       <div style={{ textAlign: "center", marginBottom: 36, padding: "0 24px" }}>
@@ -77,9 +77,11 @@ export default function ReviewsMarquee() {
           padding: "20px 0",
         }}
       >
-        {/* Edge Fade Gradients */}
+          {/* Edge Fade Gradients */}
         <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: "120px", background: "linear-gradient(90deg, #FFFFFF, transparent)", zIndex: 5, pointerEvents: "none" }} />
-        <div style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: "120px", background: "linear-gradient(270deg, #F1F5F9, transparent)", zIndex: 5, pointerEvents: "none" }} />
+        <div style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: "120px", background: "linear-gradient(270deg, #FFFDF9, transparent)", zIndex: 5, pointerEvents: "none" }} />
+        {/* Purple Glow Edge */}
+        <div style={{ position: "absolute", left: "15%", top: "-10px", width: "200px", height: "60px", background: "radial-gradient(ellipse, rgba(130,68,239,.08) 0%, transparent 70%)", filter: "blur(20px)", pointerEvents: "none", zIndex: 1 }} />
 
         {/* Marquee Track */}
         <div
@@ -103,6 +105,7 @@ export default function ReviewsMarquee() {
                 backdropFilter: "blur(16px)",
                 border: "1.5px solid rgba(35, 47, 62, 0.07)",
                 borderRadius: 24,
+                boxShadow: "0 0 0 1px rgba(255,153,0,.04), inset 0 1px 0 rgba(255,255,255,.95)",
                 padding: "20px 24px",
                 display: "flex",
                 flexDirection: "column",

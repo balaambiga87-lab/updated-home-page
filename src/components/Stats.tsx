@@ -49,7 +49,10 @@ export default function Stats() {
       style={{
         width: "100vw",
         height: "100px",
-        background: "#1e2d3d",
+        background: "linear-gradient(90deg, #FF9900 0%, #FFB020 35%, #FF9900 65%, #E68900 100%)",
+        backgroundSize: "200% 200%",
+        animation: "gradShift 6s ease infinite",
+        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.15), inset 0 -1px 0 rgba(255,255,255,0.15)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -96,7 +99,8 @@ export default function Stats() {
                 style={{
                   fontSize: "clamp(20px, 3.2vw, 32px)",
                   fontWeight: 900,
-                  color: "#FF9900", // orange number text on navy bg
+                  color: "#FFFFFF",
+                  textShadow: "0 2px 8px rgba(0,0,0,0.15)",
                   lineHeight: 1,
                   fontFamily: "inherit",
                 }}
@@ -107,7 +111,7 @@ export default function Stats() {
               <div
                 style={{
                   fontSize: "11px",
-                  color: "rgba(255, 255, 255, 0.5)",
+                  color: "rgba(255, 255, 255, 0.88)",
                   fontWeight: 700,
                   marginTop: "6px",
                   textTransform: "uppercase",
@@ -126,7 +130,7 @@ export default function Stats() {
                   right: 0,
                   height: "36px",
                   width: "1px",
-                  background: "rgba(255, 255, 255, 0.12)",
+                  background: "rgba(255, 255, 255, 0.35)",
                 }}
               />
             )}

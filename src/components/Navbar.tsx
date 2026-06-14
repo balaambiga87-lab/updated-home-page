@@ -91,8 +91,8 @@ export default function Navbar() {
               border: barBorder,
               borderRadius: "100px",
               boxShadow: scrolled
-                ? "0 12px 30px rgba(15,23,42,0.08)"
-                : "0 4px 20px rgba(15,23,42,0.02)",
+                ? "0 12px 30px rgba(15,23,42,0.08), 0 0 0 1px rgba(255,153,0,0.08)"
+                : "0 4px 20px rgba(15,23,42,0.02), 0 0 0 1px rgba(255,153,0,0.04)",
               transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
               outline: "none",
               outlineOffset: 0,
@@ -180,8 +180,8 @@ export default function Navbar() {
                 border: barBorder,
                 borderRadius: "100px",
                 boxShadow: scrolled
-                  ? "0 12px 30px rgba(15,23,42,0.08)"
-                  : "0 4px 20px rgba(15,23,42,0.02)",
+                ? "0 12px 30px rgba(15,23,42,0.08), 0 0 0 1px rgba(255,153,0,0.08)"
+                : "0 4px 20px rgba(15,23,42,0.02), 0 0 0 1px rgba(255,153,0,0.04)",
                 transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                 outline: "none",
                 outlineOffset: 0,
@@ -243,8 +243,8 @@ export default function Navbar() {
               border: barBorder,
               borderRadius: "100px",
               boxShadow: scrolled
-                ? "0 12px 30px rgba(15,23,42,0.08)"
-                : "0 4px 20px rgba(15,23,42,0.02)",
+                ? "0 12px 30px rgba(15,23,42,0.08), 0 0 0 1px rgba(255,153,0,0.08)"
+                : "0 4px 20px rgba(15,23,42,0.02), 0 0 0 1px rgba(255,153,0,0.04)",
               transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
               outline: "none",
               outlineOffset: 0,
@@ -279,16 +279,16 @@ export default function Navbar() {
             <motion.button
               whileHover={{
                 y: -2,
-                boxShadow: "0 6px 18px rgba(30, 45, 61, 0.35)",
-                backgroundColor: "#162032"
+                boxShadow: "0 8px 24px rgba(255,153,0,.4)",
+                background: "linear-gradient(135deg,#FFB020,#FF9900)"
               }}
               whileTap={{ scale: 0.96 }}
               style={{
                 padding: isMobile ? "7px 14px" : "9px 22px",
                 borderRadius: "100px",
                 border: "none",
-                background: "#1e2d3d",
-                color: "#ffffff",
+                background: "linear-gradient(135deg,#FF9900,#E68900)",
+                color: "#1e2d3d",
                 fontSize: isMobile ? "12px" : "13px",
                 fontWeight: 800,
                 cursor: "pointer",
@@ -296,7 +296,7 @@ export default function Navbar() {
                 outline: "none",
                 outlineOffset: 0,
                 whiteSpace: "nowrap",
-                boxShadow: "0 4px 12px rgba(30, 45, 61, 0.2)",
+                boxShadow: "0 4px 16px rgba(255,153,0,.3), 0 2px 6px rgba(255,153,0,.2)",
                 transition: "background 0.2s ease, y 0.2s ease, box-shadow 0.2s ease",
               }}
             >
@@ -366,6 +366,19 @@ export default function Navbar() {
         </div>
       </motion.nav>
 
+      {/* Purple glow blob (center top) */}
+      <div
+        style={{
+          position: "fixed",
+          top: 0,
+          left: "25%",
+          width: "50%",
+          height: "140px",
+          background: "radial-gradient(ellipse at 50% 5%, rgba(130,68,239,.18) 0%, rgba(130,68,239,.07) 35%, rgba(255,255,255,0) 65%)",
+          pointerEvents: "none",
+          zIndex: 898,
+        }}
+      />
       {/* Left orange glow blob */}
       <div
         style={{
@@ -374,7 +387,7 @@ export default function Navbar() {
           left: 0,
           width: "40%",
           height: "140px",
-          background: "radial-gradient(ellipse at top left, rgba(255,153,0,.09) 0%, transparent 70%)",
+          background: "radial-gradient(ellipse at 5% 5%, rgba(255,153,0,.22) 0%, rgba(255,153,0,.1) 35%, rgba(255,255,255,0) 65%)",
           pointerEvents: "none",
           zIndex: 898,
         }}
@@ -387,7 +400,7 @@ export default function Navbar() {
           right: 0,
           width: "40%",
           height: "140px",
-          background: "radial-gradient(ellipse at top right, rgba(0,115,187,.08) 0%, transparent 70%)",
+          background: "radial-gradient(ellipse at 95% 5%, rgba(0,115,187,.16) 0%, rgba(0,115,187,.07) 35%, rgba(255,255,255,0) 65%)",
           pointerEvents: "none",
           zIndex: 898,
         }}
@@ -395,5 +408,3 @@ export default function Navbar() {
     </>
   );
 }
-
-

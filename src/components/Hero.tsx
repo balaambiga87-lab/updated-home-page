@@ -44,7 +44,7 @@ export default function Hero() {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        background: "#ffffff",
+        background: "transparent",
         position: "relative",
         overflow: "hidden",
         padding: "40px 0",
@@ -59,8 +59,8 @@ export default function Hero() {
           width: "400px",
           height: "400px",
           borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(0, 115, 187, 0.05) 0%, rgba(255, 255, 255, 0) 70%)",
-          filter: "blur(40px)",
+          background: "radial-gradient(ellipse at 95% 5%, rgba(255,153,0,.26) 0%, rgba(255,153,0,.12) 35%, rgba(255,255,255,0) 65%)",
+          filter: "blur(50px)",
           pointerEvents: "none",
         }}
       />
@@ -72,8 +72,21 @@ export default function Hero() {
           width: "500px",
           height: "500px",
           borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(255, 153, 0, 0.05) 0%, rgba(255, 255, 255, 0) 70%)",
-          filter: "blur(50px)",
+          background: "radial-gradient(circle, rgba(0,115,187,.14) 0%, rgba(255,255,255,0) 70%)",
+          filter: "blur(55px)",
+          pointerEvents: "none",
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          top: "30%",
+          right: "30%",
+          width: "350px",
+          height: "350px",
+          borderRadius: "50%",
+          background: "radial-gradient(circle, rgba(130,68,239,.12) 0%, rgba(255,255,255,0) 70%)",
+          filter: "blur(55px)",
           pointerEvents: "none",
         }}
       />
@@ -94,27 +107,28 @@ export default function Hero() {
       {/* Main Container */}
       <motion.div
         whileHover={{
-          boxShadow: "0 30px 80px rgba(15,23,42,0.12), inset 0 0 30px rgba(255,255,255,0.8)"
+          boxShadow: "0 30px 80px rgba(15,23,42,0.12), 0 0 0 1px rgba(255,153,0,.07), inset 0 1px 0 rgba(255,255,255,1), inset 0 0 30px rgba(255,255,255,0.8)"
         }}
         transition={{ duration: 0.4 }}
         style={{
           width: "100%",
           maxWidth: "1300px",
-          padding: isMobile ? "32px 24px" : "48px 56px",
+          padding: isMobile ? "32px 24px" : "36px 56px",
           display: "flex",
           flexDirection: isMobile ? "column" : "row",
           justifyContent: "space-between",
           alignItems: "center",
           gap: isMobile ? "40px" : "40px",
           zIndex: 10,
-          background: "linear-gradient(135deg, rgba(255,153,0,0.06), rgba(0,122,255,0.05)), rgba(255,255,255,0.55)",
+          background: "linear-gradient(135deg, rgba(255,153,0,.12), rgba(0,115,187,.06)), rgba(255,255,255,.75)",
           backdropFilter: "blur(20px)",
           WebkitBackdropFilter: "blur(20px)",
-          border: "1px solid rgba(255,255,255,0.6)",
-          boxShadow: "0 20px 60px rgba(15,23,42,0.08), inset 0 0 20px rgba(255,255,255,0.4)",
+          border: "1px solid rgba(255,255,255,.95)",
+          boxShadow: "0 20px 60px rgba(15,23,42,.05), 0 0 0 1px rgba(255,153,0,.07), inset 0 1px 0 rgba(255,255,255,1), inset 0 0 30px rgba(255,255,255,.6)",
           borderRadius: "40px",
           position: "relative",
           overflow: "hidden",
+          marginTop: isMobile ? "0px" : "-10px",
         }}
       >
         {/* Soft floating gradient blobs inside the glass */}
@@ -189,12 +203,12 @@ export default function Hero() {
                 >
                   <span
                     style={{
-                      backgroundImage: "linear-gradient(90deg, #FF9900, #F7BA45)",
+                      backgroundImage: "linear-gradient(90deg, #FF9900, #F7BA45, rgba(130,68,239,.8))",
                       backgroundSize: "200% auto",
                       WebkitBackgroundClip: "text",
                       WebkitTextFillColor: "transparent",
                       backgroundClip: "text",
-                      textShadow: "0 2px 10px rgba(255,153,0,0.1)",
+                      textShadow: "0 2px 10px rgba(130,68,239,0.1)",
                     }}
                   >
                     {ROTATING_TEXTS[textIndex].text}

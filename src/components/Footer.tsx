@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 import { motion } from "framer-motion";
 
 const COLS = [
@@ -28,17 +29,21 @@ const COLS = [
 ];
 
 export default function Footer() {
+  const [hov1, setHov1] = useState(false);
+  const [hov2, setHov2] = useState(false);
   return (
     <footer
       style={{
         width: "100vw",
-        background: "#1e2d3d",
+        background: "linear-gradient(160deg, #FAFAF8 0%, #F8F9FA 50%, #F5F5F7 100%)",
+        borderTop: "2px solid transparent",
+        backgroundClip: "padding-box",
         padding: "72px 0",
         position: "relative",
         zIndex: 30,
         overflow: "hidden",
-      }}
-    >
+      }}>
+      <div style={{ position:"absolute", top:0, left:0, right:0, height:"2px", background:"linear-gradient(90deg, #FF9900 0%, rgb(130,68,239) 50%, #0073BB 100%)", zIndex:1 }} />
       <div
         style={{
           width: "100%",
@@ -68,8 +73,9 @@ export default function Footer() {
                   width: "32px",
                   height: "32px",
                   borderRadius: "8px",
-                  background: "rgba(255,255,255,0.12)",
-                  border: "1px solid rgba(255,255,255,0.15)",
+                  background: "linear-gradient(135deg, #FF9900, #E68900)",
+                  border: "none",
+                  boxShadow: "0 4px 16px rgba(255,153,0,.35)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -84,16 +90,16 @@ export default function Footer() {
                 </svg>
               </motion.div>
               <div>
-                <div style={{ fontWeight: 800, fontSize: "13px", color: "#ffffff", lineHeight: 1.2 }}>
+                <div style={{ fontWeight: 800, fontSize: "13px", color: "#1e2d3d", lineHeight: 1.2 }}>
                   AWS SBG REC
                 </div>
-                <div style={{ fontSize: "9px", color: "rgba(255,255,255,0.4)" }}>
+                <div style={{ fontSize: "9px", color: "#9ca3af" }}>
                   Student Builders Group
                 </div>
               </div>
             </div>
             
-            <p style={{ fontSize: "12px", color: "rgba(255, 255, 255, 0.45)", lineHeight: 1.75, maxWidth: "240px", marginBottom: "20px" }}>
+            <p style={{ fontSize: "12px", color: "#6b7280", lineHeight: 1.75, maxWidth: "240px", marginBottom: "20px" }}>
               Empowering the next generation of cloud professionals through community, learning, and innovation.
             </p>
 
@@ -108,19 +114,22 @@ export default function Footer() {
                   label: "LinkedIn",
                   path: "M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"
                 }
-              ].map((s) => (
+              ].map((s, si) => (
                 <motion.a
                   key={s.label}
                   href="#"
                   title={s.label}
-                  whileHover={{ backgroundColor: "#FF9900", y: -2 }}
+                  onMouseEnter={() => si === 0 ? setHov1(true) : setHov2(true)}
+                  onMouseLeave={() => si === 0 ? setHov1(false) : setHov2(false)}
+                  whileHover={{ backgroundColor: "rgb(130,68,239)", y: -2 }}
                   transition={{ type: "spring", stiffness: 300, damping: 15 }}
                   style={{
                     width: "34px",
                     height: "34px",
-                    background: "rgba(255, 255, 255, 0.08)",
-                    border: "1px solid rgba(255, 255, 255, 0.12)",
-                    borderRadius: "9px",
+                    background: "rgba(130,68,239,.1)",
+                    border: "1px solid rgba(130,68,239,.22)",
+                    borderRadius: "10px",
+                    boxShadow: "inset 0 1px 0 rgba(255,255,255,.8)",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -128,7 +137,7 @@ export default function Footer() {
                     transition: "background-color 0.2s ease",
                   }}
                 >
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="#ffffff">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill={si === 0 ? (hov1 ? "#ffffff" : "rgb(130,68,239)") : (hov2 ? "#ffffff" : "rgb(130,68,239)")}>
                     <path d={s.path} />
                   </svg>
                 </motion.a>
@@ -143,7 +152,7 @@ export default function Footer() {
                 style={{
                   fontWeight: 800,
                   fontSize: "12px",
-                  color: "rgba(255, 255, 255, 0.55)",
+                  color: "#232F3E",
                   marginBottom: "16px",
                   textTransform: "uppercase",
                   letterSpacing: "0.08em",
@@ -155,11 +164,11 @@ export default function Footer() {
                 <motion.a
                   key={link.label}
                   href={link.href}
-                  whileHover={{ color: "#FF9900", x: 4 }}
+                  whileHover={{ color: "rgb(130,68,239)", x: 4 }}
                   transition={{ duration: 0.18, ease: "easeOut" }}
                   style={{
                     display: "block",
-                    color: "rgba(255, 255, 255, 0.4)",
+                    color: "#6b7280",
                     fontSize: "12px",
                     fontWeight: 600,
                     textDecoration: "none",
@@ -181,12 +190,12 @@ export default function Footer() {
             alignItems: "center",
             justifyContent: "space-between",
             paddingTop: "24px",
-            borderTop: "1px solid rgba(255, 255, 255, 0.06)",
+            borderTop: "1px solid rgba(35,47,62,.08)",
             flexWrap: "wrap",
             gap: "16px",
           }}
         >
-          <div style={{ fontSize: "11px", color: "rgba(255, 255, 255, 0.25)", fontWeight: 500 }}>
+          <div style={{ fontSize: "11px", color: "#9ca3af", fontWeight: 500 }}>
             © 2026 AWS Student Builders Group REC. All rights reserved.
           </div>
           <div style={{ display: "flex", gap: "16px" }}>
@@ -194,11 +203,14 @@ export default function Footer() {
               <a
                 key={text}
                 href="#"
+                onMouseEnter={e => e.currentTarget.style.color = "rgb(130,68,239)"}
+                onMouseLeave={e => e.currentTarget.style.color = "#9ca3af"}
                 style={{
                   fontSize: "11px",
-                  color: "rgba(255, 255, 255, 0.25)",
+                  color: "#9ca3af",
                   textDecoration: "none",
                   fontWeight: 500,
+                  transition: "color 0.2s ease",
                 }}
               >
                 {text}

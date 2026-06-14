@@ -84,14 +84,14 @@ export default function Events() {
       ref={containerRef}
       style={{
         width: "100vw",
-        background: "#ffffff",
+        background: "#FDFCFB",
         padding: "60px 0",
         position: "relative",
         overflow: "hidden",
         scrollMarginTop: "100px",
       }}
     >
-      {/* Decorative Blob */}
+      {/* Decorative Blobs */}
       <div
         style={{
           position: "absolute",
@@ -100,8 +100,21 @@ export default function Events() {
           width: "400px",
           height: "400px",
           borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(30, 45, 61, 0.03) 0%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(0, 115, 187, 0.06) 0%, transparent 70%)",
           animation: "blob 20s ease-in-out infinite",
+          pointerEvents: "none",
+          zIndex: 0,
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          bottom: "-60px",
+          left: "-60px",
+          width: "300px",
+          height: "300px",
+          borderRadius: "50%",
+          background: "radial-gradient(circle, rgba(130,68,239,.08) 0%, transparent 70%)",
           pointerEvents: "none",
           zIndex: 0,
         }}
@@ -119,10 +132,10 @@ export default function Events() {
       >
         {/* Header */}
         <div style={{ textAlign: "center", marginBottom: "48px" }}>
-          <h2 style={{ fontSize: "clamp(2.2rem, 4vw, 3rem)", fontWeight: 900, color: "#1e2d3d", marginBottom: "12px", letterSpacing: "-0.02em" }}>
+          <h2 style={{ fontSize: "clamp(2.2rem, 4vw, 3rem)", fontWeight: 900, marginBottom: "12px", letterSpacing: "-0.02em", backgroundImage: "linear-gradient(90deg, #1e2d3d, rgb(130,68,239))", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
             EVENTS
           </h2>
-          <div style={{ width: "60px", height: "3px", background: "#FF9900", margin: "0 auto 16px" }} />
+          <div style={{ width: "60px", height: "3px", background: "linear-gradient(90deg, #FF9900, rgb(130,68,239))", margin: "0 auto 16px" }} />
           <p style={{ fontSize: "15px", color: "#4b5563", maxWidth: "600px", margin: "0 auto", lineHeight: 1.6 }}>
             Join our workshops, community days, and certification bootcamps
           </p>
@@ -180,7 +193,7 @@ export default function Events() {
                     zIndex: N - depth,
                     transformOrigin: "top center",
                     boxShadow: isTop
-                      ? "0 24px 56px rgba(15,23,42,0.12)"
+                      ? "0 24px 56px rgba(15,23,42,0.12), 0 0 0 1px rgba(130,68,239,.08)"
                       : "0 8px 24px rgba(15,23,42,0.06)",
                     userSelect: "none",
                     pointerEvents: "none",
@@ -297,7 +310,7 @@ export default function Events() {
                 border: `1.5px solid ${currentTopCard.borderTheme}`,
                 borderRadius: "24px",
                 padding: isMobile ? "20px" : "28px",
-                boxShadow: "0 20px 40px rgba(30, 45, 61, 0.03), inset 0 0 20px rgba(255, 255, 255, 0.3)",
+                boxShadow: "0 20px 40px rgba(30, 45, 61, 0.03), 0 0 0 1px rgba(130,68,239,0.08), 0 0 30px rgba(130,68,239,0.05), 0 0 40px rgba(130,68,239,.06), inset 0 0 20px rgba(255, 255, 255, 0.3)",
                 display: "flex",
                 flexDirection: "column",
                 gap: "16px",
@@ -360,13 +373,13 @@ export default function Events() {
 
               {/* Full-width dark Register Now CTA */}
               <motion.button
-                whileHover={{ scale: 1.01, backgroundColor: "#111827" }}
+                whileHover={{ scale: 1.01, background: "linear-gradient(135deg,rgb(130,68,239),rgb(100,50,200))", boxShadow: "0 12px 28px rgba(130,68,239,.4)" }}
                 whileTap={{ scale: 0.98 }}
                 style={{
                   width: "100%",
                   padding: "12px",
-                  background: "#1e2d3d",
-                  color: "#ffffff",
+                  background: "linear-gradient(135deg, rgb(130,68,239) 0%, rgb(100,50,200) 100%)",
+                  color: "#FFFFFF",
                   border: "none",
                   borderRadius: "100px",
                   cursor: "pointer",
@@ -378,7 +391,7 @@ export default function Events() {
                   gap: "8px",
                   marginTop: "4px",
                   fontFamily: "inherit",
-                  boxShadow: "0 10px 20px rgba(30, 45, 61, 0.15)",
+                  boxShadow: "0 8px 20px rgba(130,68,239,.3)",
                   transition: "background-color 0.2s ease"
                 }}
               >
@@ -394,7 +407,7 @@ export default function Events() {
                   key={i}
                   animate={{
                     width: order[0] === i ? 24 : 8,
-                    backgroundColor: order[0] === i ? "#FF9900" : "rgba(35,47,62,.18)",
+                    backgroundColor: order[0] === i ? "rgb(130,68,239)" : "rgba(35,47,62,.18)",
                   }}
                   transition={{ duration: 0.3 }}
                   style={{ height: 8, borderRadius: 100, cursor: "pointer" }}
@@ -418,7 +431,7 @@ export default function Events() {
             {/* Play/Pause */}
             <motion.button
               onClick={() => setPaused((p) => !p)}
-              whileHover={{ scale: 1.04 }}
+              whileHover={{ scale: 1.04, borderColor: "rgb(130,68,239)", color: "rgb(130,68,239)" }}
               whileTap={{ scale: 0.96 }}
               style={{
                 alignSelf: "center",

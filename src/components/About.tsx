@@ -21,7 +21,7 @@ export default function About() {
       ref={containerRef}
       style={{
         width: "100vw",
-        background: "#ffffff",
+        background: "linear-gradient(160deg,#FFFDF9 0%,#FFFFFF 40%,#F5FAFF 100%)",
         padding: "60px 0",
         position: "relative",
         overflow: "hidden",
@@ -60,17 +60,17 @@ export default function About() {
             <motion.div
               whileHover={{ 
                 y: -6, 
-                boxShadow: "0 30px 60px rgba(35, 47, 62, 0.06), 0 0 0 1.5px rgba(255,153,0,0.12)",
-                borderColor: "rgba(255, 153, 0, 0.15)"
+                boxShadow: "0 30px 60px rgba(35,47,62,.06), 0 0 0 2px rgba(255,153,0,.14), 0 0 24px rgba(255,153,0,.1)",
+                borderColor: "rgba(255,153,0,.2)"
               }}
               transition={{ type: "spring", stiffness: 300, damping: 22 }}
               style={{
-                background: "rgba(255, 255, 255, 0.8)",
+                background: "linear-gradient(160deg,rgba(255,255,255,1) 0%,rgba(255,255,255,.97) 50%,rgba(255,249,240,.92) 100%)",
                 backdropFilter: "blur(24px)",
                 WebkitBackdropFilter: "blur(24px)",
                 borderRadius: "32px",
-                border: "1.5px solid rgba(35, 47, 62, 0.08)",
-                boxShadow: "0 20px 40px rgba(35, 47, 62, 0.02), inset 0 0 20px rgba(255, 255, 255, 0.6)",
+                border: "1px solid rgba(255,255,255,.95)",
+                boxShadow: "0 0 0 1px rgba(255,153,0,.07), 0 4px 24px rgba(255,153,0,.06), 0 20px 48px rgba(35,47,62,.03), inset 0 1px 0 rgba(255,255,255,1)",
                 padding: isMobile ? "24px 16px" : "56px 60px",
                 display: "flex",
                 flexDirection: "column",
@@ -97,12 +97,12 @@ export default function About() {
               <div
                 style={{
                   position: "absolute",
-                  top: "-50px",
-                  left: "-50px",
-                  width: "220px",
-                  height: "220px",
+                  top: "-80px",
+                  left: "-80px",
+                  width: "380px",
+                  height: "380px",
                   borderRadius: "50%",
-                  background: "radial-gradient(circle, rgba(0, 115, 187, 0.06) 0%, transparent 70%)",
+                  background: "radial-gradient(circle, rgba(255,153,0,.1) 0%, transparent 70%)",
                   pointerEvents: "none",
                   zIndex: 1,
                 }}
@@ -110,35 +110,48 @@ export default function About() {
               <div
                 style={{
                   position: "absolute",
-                  bottom: "-50px",
-                  right: "-50px",
-                  width: "220px",
-                  height: "220px",
+                  bottom: "-80px",
+                  right: "-80px",
+                  width: "380px",
+                  height: "380px",
                   borderRadius: "50%",
-                  background: "radial-gradient(circle, rgba(255, 153, 0, 0.08) 0%, transparent 70%)",
+                  background: "radial-gradient(circle, rgba(255, 153, 0, 0.2) 0%, transparent 70%)",
                   pointerEvents: "none",
                   zIndex: 1,
                 }}
               />
-
+              <div
+                style={{
+                  position: "absolute",
+                  top: "-40px",
+                  right: "-40px",
+                  width: "260px",
+                  height: "260px",
+                  borderRadius: "50%",
+                  background: "radial-gradient(circle, rgba(255, 153, 0, 0.1) 0%, transparent 70%)",
+                  pointerEvents: "none",
+                  zIndex: 1,
+                }}
+              />
               <div
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
                   gap: "8px",
-                  background: "rgba(35, 47, 62, 0.04)",
-                  border: "1px solid rgba(35, 47, 62, 0.08)",
+                  background: "linear-gradient(135deg,rgba(130,68,239,.1),rgba(255,153,0,.05))",
+                  border: "1px solid rgba(130,68,239,.22)",
                   borderRadius: "100px",
                   padding: "6px 16px",
                   position: "relative",
                   zIndex: 2,
+                  boxShadow: "0 0 10px rgba(130,68,239,.08), inset 0 1px 0 rgba(255,255,255,.8)",
                 }}
               >
                 <span
                   style={{
                     fontSize: "10px",
                     fontWeight: 800,
-                    color: "#232F3E",
+                    color: "rgb(130,68,239)",
                     textTransform: "uppercase",
                     letterSpacing: "0.1em",
                   }}
@@ -172,6 +185,8 @@ export default function About() {
                   zIndex: 2,
                   width: "100%",
                   maxWidth: "900px",
+                  textAlign: "center",
+                  margin: "0 auto",
                 }}
               >
                 <p
@@ -181,6 +196,7 @@ export default function About() {
                     lineHeight: 1.8,
                     margin: 0,
                     fontWeight: 500,
+                    textAlign: "center",
                   }}
                 >
                   AWS Student Builders Group REC is a student-driven cloud community at Rajalakshmi Engineering College dedicated to learning, building, and innovating with Amazon Web Services. We bring together aspiring developers, cloud enthusiasts, and future technology leaders to explore modern cloud technologies through practical experiences and collaborative learning.
@@ -192,6 +208,7 @@ export default function About() {
                     lineHeight: 1.8,
                     margin: 0,
                     fontWeight: 500,
+                    textAlign: "center",
                   }}
                 >
                   By combining technical knowledge with hands-on implementation, we help students transform ideas into real-world solutions while preparing them for the rapidly evolving technology industry.
@@ -201,7 +218,7 @@ export default function About() {
               {/* Separator line inside the card */}
               <div style={{
                 height: "1px",
-                background: "linear-gradient(90deg, transparent, rgba(35, 47, 62, 0.08), transparent)",
+                background: "linear-gradient(90deg, transparent, rgba(255,153,0,.18), rgba(0,115,187,.12), transparent)",
                 width: "100%",
                 margin: "8px 0",
                 position: "relative",
@@ -223,7 +240,7 @@ export default function About() {
           transition={{ duration: 0.8, ease: "easeOut", delay: 0.4 }}
           style={{
             height: "1px",
-            background: "linear-gradient(90deg, transparent, #FF9900, transparent)",
+            background: "linear-gradient(90deg, transparent, #FF9900 25%, rgb(130,68,239) 50%, #0073BB 75%, transparent)",
             width: "100%",
             transformOrigin: "left",
           }}

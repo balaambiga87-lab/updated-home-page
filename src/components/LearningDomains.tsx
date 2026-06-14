@@ -113,7 +113,7 @@ export default function LearningDomains() {
               display: "flex",
               flexDirection: "column",
               gap: "10px",
-              boxShadow: "0 10px 30px rgba(0,0,0,0.02)",
+              boxShadow: "0 10px 30px rgba(0,0,0,0.02), 0 0 0 1px rgba(255,153,0,0.08), 0 0 25px rgba(255,153,0,0.04)",
               transition: "all 0.3s ease",
             }}
           >

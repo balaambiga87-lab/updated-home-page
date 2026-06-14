@@ -222,7 +222,7 @@ export default function Journey() {
             display: "flex",
             alignItems: "center",
             gap: "20px",
-            boxShadow: "0 10px 30px rgba(0,0,0,0.02)",
+            boxShadow: "0 10px 30px rgba(0,0,0,0.02), 0 0 0 1px rgba(255,153,0,0.08), 0 0 25px rgba(255,153,0,0.04)",
             maxWidth: "700px",
             margin: "0 auto",
           }}

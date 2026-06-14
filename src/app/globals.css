@@ -13,14 +13,15 @@ html, body, #__next {
 }
 body {
   font-family: 'Plus Jakarta Sans', sans-serif;
-  background: #ffffff;
+  background: #FDFCFB;
+  background-attachment: fixed;
   color: #1d2939;
   -webkit-font-smoothing: antialiased;
 }
 
 ::-webkit-scrollbar{width:5px;}
-::-webkit-scrollbar-track{background:#fff;}
-::-webkit-scrollbar-thumb{background:#1e2d3d;border-radius:4px;}
+::-webkit-scrollbar-track{background:#FDFCFB;}
+::-webkit-scrollbar-thumb{background:rgba(255,153,0,.4);border-radius:4px;}
 
 /* ── AWS-style gradient background (like screenshot) ── */
 .aws-grad-bg {
@@ -84,9 +85,115 @@ body {
 @keyframes bounceIn   { 0%{transform:scale(.6) translateY(30px);opacity:0} 60%{transform:scale(1.06) translateY(-6px)} 100%{transform:scale(1) translateY(0);opacity:1} }
 @keyframes blob       { 0%,100%{transform:translate(0,0) scale(1)} 33%{transform:translate(40px,-30px) scale(1.06)} 66%{transform:translate(-25px,35px) scale(.95)} }
 @keyframes glowRotate { 0%   { background-position: 0%   50%; } 50%  { background-position: 100% 50%; } 100% { background-position: 0%   50%; } }
+@keyframes particleRise {
+  from { opacity:0; transform:translateY(0); }
+  10%  { opacity:1; }
+  90%  { opacity:.6; }
+  to   { opacity:0; transform:translateY(-100vh); }
+}
+
+/* ── Glow Card utility ── */
+.glow-card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 10%; right: 10%;
+  height: 1px;
+  background: linear-gradient(
+    90deg, transparent,
+    rgba(255,255,255,.95) 35%,
+    rgba(255,255,255,1) 50%,
+    rgba(255,255,255,.95) 65%,
+    transparent
+  );
+  border-radius: 1px;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.badge-bright {
+  background: linear-gradient(
+    135deg,
+    rgba(255,153,0,.1),
+    rgba(255,153,0,.05)
+  );
+  border: 1px solid rgba(255,153,0,.22);
+  color: #E68900;
+  box-shadow:
+    0 0 10px rgba(255,153,0,.08),
+    inset 0 1px 0 rgba(255,255,255,.8);
+}
+
+.section-divider {
+  height: 1px; width: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255,153,0,.2) 25%,
+    rgba(0,115,187,.15) 50%,
+    rgba(255,153,0,.2) 75%,
+    transparent 100%
+  );
+}
+
+/* ── Glowing top highlight on cards ── */
+.glow-top::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 8%; right: 8%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255,255,255,.95) 30%,
+    rgba(255,255,255,1) 50%,
+    rgba(255,255,255,.95) 70%,
+    transparent
+  );
+  border-radius: 1px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ── Orange glow border ── */
+.glow-border-orange {
+  box-shadow:
+    0 0 0 1px rgba(255,153,0,.1),
+    0 4px 20px rgba(255,153,0,.08),
+    inset 0 1px 0 rgba(255,255,255,.95);
+}
+.glow-border-orange:hover {
+  box-shadow:
+    0 0 0 2px rgba(255,153,0,.2),
+    0 0 28px rgba(255,153,0,.14),
+    0 8px 28px rgba(255,153,0,.07),
+    inset 0 1px 0 rgba(255,255,255,1);
+}
+
+/* ── Bright badge ── */
+.badge-orange {
+  background: linear-gradient(135deg,
+    rgba(255,153,0,.1),
+    rgba(255,153,0,.05));
+  border: 1px solid rgba(255,153,0,.22);
+  color: #E68900;
+  box-shadow:
+    0 0 10px rgba(255,153,0,.08),
+    inset 0 1px 0 rgba(255,255,255,.8);
+}
+
+/* ── Section gradient divider ── */
+.grad-divider {
+  height: 1px; width: 100%;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(255,153,0,.22) 25%,
+    rgba(0,115,187,.16) 50%,
+    rgba(255,153,0,.22) 75%,
+    transparent 100%
+  );
+}
 
 /* ── Prevent fixed header cutoff on landing page sections ── */
 #home, #about, #events, #gallery, #reviews, #team, #community {
   scroll-margin-top: 100px !important;
 }
-

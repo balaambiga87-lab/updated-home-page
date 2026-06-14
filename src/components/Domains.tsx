@@ -28,7 +28,7 @@ export default function Domains() {
       style={{
         width: "100%",
         height: "64px",
-        background: "#1A222D",
+        background: "linear-gradient(90deg, #002D5A 0%, #003D6B 50%, #002D5A 100%)",
         display: "flex",
         alignItems: "center",
         overflow: "hidden",
@@ -76,86 +76,92 @@ export default function Domains() {
           >
             {DOMAINS.map((domain, idx) => (
               <React.Fragment key={`t1-frag-${idx}`}>
-                <motion.div
-                  whileHover={{
-                    backgroundColor: "#FF9900",
-                    color: "#232F3E",
-                    borderColor: "#FF9900",
-                    scale: 1.05,
-                    boxShadow: "0 4px 16px rgba(255, 153, 0, 0.3)",
-                  }}
-                  transition={{ duration: 0.2 }}
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: "8px",
-                    height: "42px",
-                    padding: "10px 22px",
-                    borderRadius: "100px",
-                    border: "1.5px solid rgba(255, 255, 255, 0.15)",
-                    background: "#232F3E",
-                    color: "#FFFFFF",
-                    fontSize: "14px",
-                    fontWeight: 600,
-                    whiteSpace: "nowrap",
-                    flexShrink: 0,
-                    cursor: "default",
-                    transition: "all 0.2s ease",
-                  }}
-                >
-                  {domain}
-                </motion.div>
-                <span
-                  style={{
-                    width: 4,
-                    height: 4,
-                    borderRadius: "50%",
-                    background: "#FF9900",
-                    opacity: 0.6,
-                    flexShrink: 0,
-                    display: "inline-block",
-                  }}
-                />
-              </React.Fragment>
-            ))}
-          </div>
+              <motion.div
+                whileHover={{
+                  backgroundColor: "rgba(0, 60, 120, 0.9)",
+                  color: "#FFFFFF",
+                  borderColor: "rgba(255,255,255,.85)",
+                  scale: 1.05,
+                  boxShadow: "0 0 16px rgba(0, 100, 200, .4)",
+                }}
+                transition={{ duration: 0.2 }}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "8px",
+                  height: "42px",
+                  padding: "10px 22px",
+                  borderRadius: "100px",
+                  border: "1px solid rgba(255,255,255,.5)",
+                  boxShadow: "0 0 8px rgba(0,0,0,.2)",
+                  background: "rgba(0, 45, 90, 0.7)",
+                  backdropFilter: "blur(8px)",
+                  WebkitBackdropFilter: "blur(8px)",
+                  color: "#FFFFFF",
+                  fontSize: "14px",
+                  fontWeight: 700,
+                  whiteSpace: "nowrap",
+                  flexShrink: 0,
+                  cursor: "default",
+                  transition: "all 0.2s ease",
+                }}
+              >
+                {domain}
+              </motion.div>
+              <span
+                style={{
+                  width: 4,
+                  height: 4,
+                  borderRadius: "50%",
+                  background: "rgba(0, 30, 60, 0.6)",
+                  opacity: 1,
+                  flexShrink: 0,
+                  display: "inline-block",
+                }}
+              />
+            </React.Fragment>
+          ))}
+        </div>
 
-          {/* Track 2 (duplicate for seamless loop) */}
-          <div 
-            style={{ 
-              display: "flex", 
-              gap: "14px", 
-              alignItems: "center",
-              border: "none",
-              outline: "none",
-              outlineOffset: 0,
-            }}
-          >
-            {DOMAINS.map((domain, idx) => (
-              <React.Fragment key={`t2-frag-${idx}`}>
-                <motion.div
-                  whileHover={{
-                    backgroundColor: "#FF9900",
-                    color: "#232F3E",
-                    borderColor: "#FF9900",
-                    scale: 1.05,
-                    boxShadow: "0 4px 16px rgba(255, 153, 0, 0.3)",
-                  }}
-                  transition={{ duration: 0.2 }}
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: "8px",
-                    height: "42px",
-                    padding: "10px 22px",
-                    borderRadius: "100px",
-                    border: "1.5px solid rgba(255, 255, 255, 0.15)",
-                    background: "#232F3E",
-                    color: "#FFFFFF",
+        {/* Track 2 (duplicate for seamless loop) */}
+        <div 
+          style={{ 
+            display: "flex", 
+            gap: "14px", 
+            alignItems: "center",
+            border: "none",
+            outline: "none",
+            outlineOffset: 0,
+          }}
+        >
+          {DOMAINS.map((domain, idx) => (
+            <React.Fragment key={`t2-frag-${idx}`}>
+              <motion.div
+                whileHover={{
+                  backgroundColor: "rgba(0, 60, 120, 0.9)",
+                  color: "#FFFFFF",
+                  borderColor: "rgba(255,255,255,.85)",
+                  scale: 1.05,
+                  boxShadow: "0 0 16px rgba(0, 100, 200, .4)",
+                }}
+                transition={{ duration: 0.2 }}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "8px",
+                  height: "42px",
+                  padding: "10px 22px",
+                  borderRadius: "100px",
+                  border: "1px solid rgba(255,255,255,.5)",
+                  boxShadow: "0 0 8px rgba(0,0,0,.2)",
+                  background: "rgba(0, 45, 90, 0.7)",
+                  backdropFilter: "blur(8px)",
+                  WebkitBackdropFilter: "blur(8px)",
+                  color: "#FFFFFF",
                     fontSize: "14px",
-                    fontWeight: 600,
+                    fontWeight: 700,
                     whiteSpace: "nowrap",
                     flexShrink: 0,
                     cursor: "default",
@@ -169,8 +175,8 @@ export default function Domains() {
                     width: 4,
                     height: 4,
                     borderRadius: "50%",
-                    background: "#FF9900",
-                    opacity: 0.6,
+                    background: "rgba(0, 30, 60, 0.6)",
+                    opacity: 1,
                     flexShrink: 0,
                     display: "inline-block",
                   }}

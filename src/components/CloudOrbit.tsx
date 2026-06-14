@@ -81,7 +81,7 @@ const Tooltip = memo(
           border: "1.5px solid rgba(35,47,62,0.09)",
           borderRadius: "13px",
           boxShadow:
-            "0 12px 36px rgba(35,47,62,0.10), 0 2px 8px rgba(0,115,187,0.06)",
+            "0 12px 36px rgba(35,47,62,0.10), 0 2px 8px rgba(0,115,187,0.06), 0 0 0 1px rgba(255,153,0,0.06), 0 0 20px rgba(255,153,0,0.03)",
           textAlign: "center",
         }}
       >
@@ -236,8 +236,8 @@ export default function CloudOrbit() {
     const isMobile = screenSize === "mobile";
     const isTablet = screenSize === "tablet";
 
-    const containerSize = isMobile ? 320 : isTablet ? 430 : 620;
-    const centerR = isMobile ? 42 : isTablet ? 48 : 60;
+    const containerSize = isMobile ? 320 : isTablet ? 430 : 560;
+    const centerR = isMobile ? 42 : isTablet ? 48 : 55;
     const nodeSize = isMobile ? 36 : isTablet ? 40 : 46;
     const tooltipW = isMobile ? 130 : 182;
 
@@ -248,9 +248,9 @@ export default function CloudOrbit() {
 
     // Scaled down radii to keep the globe compact and avoid viewport cutoff
     const radii = {
-      inner: isMobile ? 85 : isTablet ? 100 : 115,
-      middle: isMobile ? 125 : isTablet ? 145 : 165,
-      outer: isMobile ? 165 : isTablet ? 190 : 215,
+      inner: isMobile ? 85 : isTablet ? 100 : 105,
+      middle: isMobile ? 125 : isTablet ? 145 : 155,
+      outer: isMobile ? 165 : isTablet ? 190 : 205,
     };
 
     return { containerSize, centerR, nodeSize, radii, tooltipW };
