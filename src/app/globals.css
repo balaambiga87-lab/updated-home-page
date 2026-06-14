@@ -84,3 +84,9 @@ body {
 @keyframes bounceIn   { 0%{transform:scale(.6) translateY(30px);opacity:0} 60%{transform:scale(1.06) translateY(-6px)} 100%{transform:scale(1) translateY(0);opacity:1} }
 @keyframes blob       { 0%,100%{transform:translate(0,0) scale(1)} 33%{transform:translate(40px,-30px) scale(1.06)} 66%{transform:translate(-25px,35px) scale(.95)} }
 @keyframes glowRotate { 0%   { background-position: 0%   50%; } 50%  { background-position: 100% 50%; } 100% { background-position: 0%   50%; } }
+
+/* ── Prevent fixed header cutoff on landing page sections ── */
+#home, #about, #events, #gallery, #reviews, #team, #community {
+  scroll-margin-top: 100px !important;
+}
+

@@ -18,11 +18,10 @@ export default function Home() {
         <Hero />
         <Domains />
         <About />
-        <OurTeamShowcase />
+        <Events />
         <Gallery />
         <ReviewsMarquee />
-        
-        <Events />
+        <OurTeamShowcase />
         <CTA />
       </main>
       <Footer />

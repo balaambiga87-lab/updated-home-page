@@ -132,6 +132,7 @@ export default function OurTeamShowcase() {
 
   return (
     <section
+      id="team"
       style={{
         width: "100%",
         minHeight: "100vh",
@@ -142,7 +143,8 @@ export default function OurTeamShowcase() {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        padding: "80px 0",
+        padding: "60px 0",
+        scrollMarginTop: "100px",
       }}
     >
       {/* ── BACKGROUND ── */}

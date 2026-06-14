@@ -22,14 +22,15 @@ export default function ReviewsMarquee() {
 
   return (
     <section
-      id="reviews-slider"
+      id="reviews"
       style={{
         width: "100vw",
         background: "linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 50%, #F1F5F9 100%)",
-        padding: "64px 0 48px",
+        padding: "60px 0 48px",
         position: "relative",
         overflow: "hidden",
         zIndex: 10,
+        scrollMarginTop: "100px",
       }}
     >
       {/* Background Glows */}

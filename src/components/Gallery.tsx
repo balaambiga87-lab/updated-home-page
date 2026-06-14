@@ -49,7 +49,7 @@ const CARDS = [
     label: "🤖 Robo Wolke",
     sublabel: "Robotics & IoT Showcase · Dobot Magician",
     emoji: "🤖",
-    image: "/images/robo_wolke.jpg",
+    image: "/images/robo_wolke_journey.jpg",
     description: "An experimental robotics exhibition demonstrating the integration of cloud computing with physical hardware. The showcase highlighted controlling Dobot Magician robotic arms using AWS-backed cloud services.",
   },
 ];
@@ -235,7 +235,7 @@ export default function Gallery() {
       style={{
         width: "100vw",
         background: "#F8F9FB",
-        padding: "140px 0 96px",
+        padding: "80px 0 60px",
         position: "relative",
         overflow: "hidden",
         scrollMarginTop: "100px",

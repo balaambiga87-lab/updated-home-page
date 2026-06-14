@@ -17,9 +17,17 @@ const DESCS = [
   "Mentor others, lead projects and launch your cloud career with confidence.",
 ];
 
-export default function JourneyCard() {
+export default function JourneyCard({ plain = false, hideDesc = false }: { plain?: boolean; hideDesc?: boolean }) {
   const [active, setActive] = useState(0);
   const [hov, setHov] = useState<number|null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 1024);
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     const t = setInterval(() => setActive(a => (a+1)%STAGES.length), 2400);
@@ -30,31 +38,49 @@ export default function JourneyCard() {
 
   return (
     <div
-      style={{
+      style={plain ? {
+        width: "100%",
+        background: "transparent",
+      } : {
         width:"100%",maxWidth:500,
         background:"#ffffff",border:"1.5px solid #f0ebe3",
         borderRadius:26,overflow:"hidden",
         boxShadow:"0 20px 60px rgba(30,45,61,.1)",
       }}>
       {/* gradient top bar — draws in */}
-      <motion.div
-        initial={{ scaleX:0 }}
-        animate={{ scaleX:1 }}
-        transition={{ duration:.9, ease:"easeOut" }}
-        style={{ height:5, background:"linear-gradient(90deg,#FF9900,#E68900,#0073BB,#1e2d3d)", transformOrigin:"left" }}/>
+      {!plain && (
+        <motion.div
+          initial={{ scaleX:0 }}
+          animate={{ scaleX:1 }}
+          transition={{ duration:.9, ease:"easeOut" }}
+          style={{ height:5, background:"linear-gradient(90deg,#FF9900,#E68900,#0073BB,#1e2d3d)", transformOrigin:"left" }}/>
+      )}
 
-      <div style={{padding:"32px 30px 28px"}}>
-        <div style={{textAlign:"center",marginBottom:28}}>
-          <div style={{fontWeight:800,fontSize:16,color:"#1d2939",marginBottom:6}}>
+      <div style={plain ? { padding: "0" } : { padding:"32px 30px 28px" }}>
+        <div style={{textAlign:"center",marginBottom: plain ? 20 : 32}}>
+          <div style={{fontWeight:800,fontSize: isMobile ? 16 : 18,color:"#1d2939",marginBottom:6}}>
             Your Journey with AWS SBG REC
           </div>
-          <div style={{fontSize:12,color:"#9ca3af"}}>From beginner to cloud professional</div>
+          <div style={{fontSize: isMobile ? 11 : 13,color:"#9ca3af"}}>From beginner to cloud professional</div>
         </div>
 
         {/* nodes */}
-        <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",marginBottom:22}}>
+        <div style={{
+          display:"flex",
+          alignItems:"flex-start",
+          justifyContent:"space-between",
+          width: "100%",
+          maxWidth: "800px",
+          margin: hideDesc ? "0 auto 8px" : "0 auto 32px",
+          padding: plain ? (isMobile ? "0 8px" : "0 32px") : "0 32px",
+          boxSizing: "border-box"
+        }}>
           {STAGES.map((st,i)=>{
             const isA=i===active, isP=i<active, isH=hov===i;
+            const circleSize = isMobile ? (isA ? 50 : 36) : (isA ? 66 : 48);
+            const labelSize = isMobile ? (isA ? 9.5 : 8) : (isA ? 11 : 9);
+            const lineMargin = isMobile ? "0 2px 26px" : "0 4px 36px";
+
             return (
               <div key={i} style={{display:"flex",alignItems:"center",flex:i<STAGES.length-1?1:"none"}}>
                 <motion.div
@@ -68,19 +94,19 @@ export default function JourneyCard() {
                     animate={isA ? { scale:[1,1.08,1] } : {}}
                     transition={{ duration:1.5, repeat:Infinity }}
                     style={{
-                      width:isA?66:48, height:isA?66:48,
+                      width:circleSize, height:circleSize,
                       borderRadius:"50%",
                       background:isA?st.color:isP?st.light:isH?st.light:"#fafafa",
                       border:`2.5px solid ${isA||isP||isH?st.color:"#e0d8cf"}`,
                       display:"flex",alignItems:"center",justifyContent:"center",
-                      fontSize:isA?"1.65rem":"1.1rem",
-                      boxShadow:isA?`0 0 0 8px ${st.glow},0 6px 22px ${st.glow}`:isH?`0 4px 14px ${st.glow}`:"none",
+                      fontSize: isMobile ? (isA ? "1.2rem" : "0.9rem") : (isA ? "1.65rem" : "1.1rem"),
+                      boxShadow:isA?`0 0 0 ${isMobile ? '5px' : '8px'} ${st.glow},0 6px 22px ${st.glow}`:isH?`0 4px 14px ${st.glow}`:"none",
                     }}>
                     {st.icon}
                   </motion.div>
                   <div style={{textAlign:"center"}}>
-                    <div style={{fontSize:isA?11:9,fontWeight:isA?800:700,color:isA?st.color:isP?st.color:"#9ca3af",whiteSpace:"nowrap" as const}}>{st.label}</div>
-                    <div style={{fontSize:8,color:isA?st.color+"BB":"#9ca3af",whiteSpace:"nowrap" as const}}>{st.sub}</div>
+                    <div style={{fontSize:labelSize,fontWeight:isA?800:700,color:isA?st.color:isP?st.color:"#9ca3af",whiteSpace:"nowrap" as const}}>{st.label}</div>
+                    <div style={{fontSize: isMobile ? 7 : 8,color:isA?st.color+"BB":"#9ca3af",whiteSpace:"nowrap" as const}}>{st.sub}</div>
                   </div>
                 </motion.div>
                 {i<STAGES.length-1&&(
@@ -88,12 +114,12 @@ export default function JourneyCard() {
                     initial={{ scaleX:0 }}
                     animate={{ scaleX: i<active?1:0 }}
                     transition={{ duration:.5 }}
-                    style={{flex:1,height:2,margin:"0 4px 36px",borderRadius:2,
+                    style={{flex:1,height:2,margin:lineMargin,borderRadius:2,
                       background:`linear-gradient(90deg,${STAGES[i].color},${STAGES[i+1].color})`,
                       transformOrigin:"left",position:"relative"}}/>
                 )}
                 {i<STAGES.length-1&&i>=active&&(
-                  <div style={{flex:1,height:2,margin:"0 4px 36px",borderRadius:2,background:"#f0ebe3"}}/>
+                  <div style={{flex:1,height:2,margin:lineMargin,borderRadius:2,background:"#f0ebe3"}}/>
                 )}
               </div>
             );
@@ -101,31 +127,37 @@ export default function JourneyCard() {
         </div>
 
         {/* desc */}
-        <AnimatePresence mode="wait">
-          <motion.div key={active}
-            initial={{ opacity:0, y:8 }}
-            animate={{ opacity:1, y:0 }}
-            exit={{ opacity:0, y:-8 }}
-            transition={{ duration:.3 }}
-            style={{
-              background:cur.light, border:`1.5px solid ${cur.color}28`,
-              borderRadius:16, padding:"15px 17px", marginBottom:16,
-              display:"flex", alignItems:"center", gap:13,
-            }}>
-            <div style={{width:34,height:34,borderRadius:10,flexShrink:0,background:cur.color+"22",border:`1px solid ${cur.color}33`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"1rem"}}>{cur.icon}</div>
-            <span style={{fontSize:13,color:"#1d2939",fontWeight:600,lineHeight:1.6}}>{DESCS[active]}</span>
-          </motion.div>
-        </AnimatePresence>
+        {!hideDesc && (
+          <div style={{ width: "100%", maxWidth: "600px", margin: "0 auto 24px" }}>
+            <AnimatePresence mode="wait">
+              <motion.div key={active}
+                initial={{ opacity:0, y:8 }}
+                animate={{ opacity:1, y:0 }}
+                exit={{ opacity:0, y:-8 }}
+                transition={{ duration:.3 }}
+                style={{
+                  background:cur.light, border:`1.5px solid ${cur.color}28`,
+                  borderRadius:16, padding:"15px 17px",
+                  display:"flex", alignItems:"center", gap:13,
+                }}>
+                <div style={{width:34,height:34,borderRadius:10,flexShrink:0,background:cur.color+"22",border:`1px solid ${cur.color}33`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"1rem"}}>{cur.icon}</div>
+                <span style={{fontSize:13,color:"#1d2939",fontWeight:600,lineHeight:1.6}}>{DESCS[active]}</span>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        )}
 
         {/* dots */}
-        <div style={{display:"flex",justifyContent:"center",gap:7}}>
-          {STAGES.map((st,i)=>(
-            <motion.div key={i} onClick={()=>setActive(i)}
-              animate={{ width:i===active?24:8, background:i<=active?st.color:"#f0ebe3" }}
-              transition={{ duration:.35 }}
-              style={{height:8,borderRadius:100,cursor:"pointer"}}/>
-          ))}
-        </div>
+        {!hideDesc && (
+          <div style={{display:"flex",justifyContent:"center",gap:7}}>
+            {STAGES.map((st,i)=>(
+              <motion.div key={i} onClick={()=>setActive(i)}
+                animate={{ width:i===active?24:8, background:i<=active?st.color:"#f0ebe3" }}
+                transition={{ duration:.35 }}
+                style={{height:8,borderRadius:100,cursor:"pointer"}}/>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

@@ -32,7 +32,7 @@ export default function CTA() {
         background: "linear-gradient(135deg, #1e2d3d 0%, #243448 40%, #162032 100%)",
         backgroundSize: "200% 200%",
         animation: "bgShift 8s ease infinite",
-        padding: "72px 0",
+        padding: "60px 0",
         position: "relative",
         overflow: "hidden",
         scrollMarginTop: "100px",

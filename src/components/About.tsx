@@ -1,11 +1,19 @@
 "use client";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { motion, useInView } from "framer-motion";
 import JourneyCard from "./JourneyCard";
 
 export default function About() {
   const containerRef = useRef(null);
   const inView = useInView(containerRef, { once: true, margin: "-80px" });
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 1024);
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   return (
     <section
@@ -14,7 +22,7 @@ export default function About() {
       style={{
         width: "100vw",
         background: "#ffffff",
-        padding: "72px 0",
+        padding: "60px 0",
         position: "relative",
         overflow: "hidden",
         scrollMarginTop: "100px",
@@ -25,7 +33,7 @@ export default function About() {
           width: "100%",
           maxWidth: "1200px",
           margin: "0 auto",
-          padding: "0 44px",
+          padding: isMobile ? "0 16px" : "0 44px",
           display: "flex",
           flexDirection: "column",
           gap: "48px",
@@ -33,17 +41,16 @@ export default function About() {
       >
         <div
           style={{
-            display: "grid",
-            gridTemplateColumns: "1.1fr 1fr",
+            display: "flex",
+            flexDirection: "column",
             alignItems: "center",
-            gap: "54px",
             width: "100%",
             maxWidth: "1200px",
             margin: "0 auto",
-            padding: "40px 0",
+            padding: isMobile ? "16px 0" : "40px 0",
           }}
         >
-          {/* Left Column: Storytelling */}
+          {/* Main Card: Storytelling & Journey merged */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -64,15 +71,16 @@ export default function About() {
                 borderRadius: "32px",
                 border: "1.5px solid rgba(35, 47, 62, 0.08)",
                 boxShadow: "0 20px 40px rgba(35, 47, 62, 0.02), inset 0 0 20px rgba(255, 255, 255, 0.6)",
-                padding: "44px",
+                padding: isMobile ? "24px 16px" : "56px 60px",
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "flex-start",
-                gap: "24px",
+                gap: "32px",
                 position: "relative",
                 overflow: "hidden",
                 cursor: "pointer",
                 transition: "border-color 0.3s ease",
+                width: "100%",
               }}
             >
               {/* Dot Grid Background */}
@@ -151,42 +159,26 @@ export default function About() {
                   zIndex: 2,
                 }}
               >
-                Empowering students to{" "}
-                <span style={{ 
-                  background: "linear-gradient(135deg, #0073BB, #00A1EC)", 
-                  WebkitBackgroundClip: "text", 
-                  WebkitTextFillColor: "transparent",
-                  fontWeight: 900
-                }}>
-                  learn
-                </span>
-                ,{" "}
-                <span style={{ 
-                  background: "linear-gradient(135deg, #FF9900, #FFC061)", 
-                  WebkitBackgroundClip: "text", 
-                  WebkitTextFillColor: "transparent",
-                  fontWeight: 900
-                }}>
-                  build
-                </span>
-                , and{" "}
-                <span style={{ 
-                  background: "linear-gradient(135deg, #7C3AED, #A78BFA)", 
-                  WebkitBackgroundClip: "text", 
-                  WebkitTextFillColor: "transparent",
-                  fontWeight: 900
-                }}>
-                  innovate
-                </span>{" "}
-                on AWS.
+                Empowering students to learn, build, and innovate on AWS.
               </h2>
 
-              <div style={{ display: "flex", flexDirection: "column", gap: "16px", position: "relative", zIndex: 2 }}>
+              {/* Text paragraphs stacked vertically */}
+              <div 
+                style={{ 
+                  display: "flex", 
+                  flexDirection: "column", 
+                  gap: "18px", 
+                  position: "relative", 
+                  zIndex: 2,
+                  width: "100%",
+                  maxWidth: "900px",
+                }}
+              >
                 <p
                   style={{
-                    fontSize: "14.5px",
+                    fontSize: "15px",
                     color: "#475569",
-                    lineHeight: 1.7,
+                    lineHeight: 1.8,
                     margin: 0,
                     fontWeight: 500,
                   }}
@@ -195,9 +187,9 @@ export default function About() {
                 </p>
                 <p
                   style={{
-                    fontSize: "14.5px",
+                    fontSize: "15px",
                     color: "#475569",
-                    lineHeight: 1.7,
+                    lineHeight: 1.8,
                     margin: 0,
                     fontWeight: 500,
                   }}
@@ -205,17 +197,22 @@ export default function About() {
                   By combining technical knowledge with hands-on implementation, we help students transform ideas into real-world solutions while preparing them for the rapidly evolving technology industry.
                 </p>
               </div>
-            </motion.div>
-          </motion.div>
 
-          {/* Right Column: Journey Roadmap */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            style={{ display: "flex", justifyContent: "center", width: "100%" }}
-          >
-            <JourneyCard />
+              {/* Separator line inside the card */}
+              <div style={{
+                height: "1px",
+                background: "linear-gradient(90deg, transparent, rgba(35, 47, 62, 0.08), transparent)",
+                width: "100%",
+                margin: "8px 0",
+                position: "relative",
+                zIndex: 2,
+              }} />
+
+              {/* Journey components */}
+              <div style={{ width: "100%", position: "relative", zIndex: 2 }}>
+                <JourneyCard plain={true} hideDesc={true} />
+              </div>
+            </motion.div>
           </motion.div>
         </div>
 
