@@ -6,7 +6,6 @@ import { usePathname } from "next/navigation";
 const LINKS = [
   { label: "Home", href: "#home" },
   { label: "About Us", href: "#about" },
-  { label: "Event", href: "#events" },
   { label: "Gallery", href: "#gallery" },
   { label: "Review", href: "#reviews" },
   { label: "Team", href: "#team" }
@@ -40,12 +39,14 @@ export default function Navbar() {
     };
   }, []);
 
-  // Shared premium styling variables for all floating navbar bars
+  // Shared premium styling variables for all floating navbar bars: Navy blue gradients
   const barBackground = scrolled
-    ? "linear-gradient(160deg, rgba(255,255,255,0.94) 0%, rgba(220,236,250,0.85) 25%, rgba(255,237,200,0.8) 55%, rgba(230,244,255,0.75) 80%, rgba(255,255,255,0.94) 100%)"
-    : "linear-gradient(160deg, rgba(255,255,255,0.8) 0%, rgba(220,236,250,0.6) 25%, rgba(255,237,200,0.55) 55%, rgba(230,244,255,0.5) 80%, rgba(255,255,255,0.8) 100%)";
+    ? "linear-gradient(135deg, rgba(3, 28, 54, 0.96) 0%, rgba(15, 43, 73, 0.96) 100%)"
+    : "linear-gradient(135deg, rgba(3, 28, 54, 0.88) 0%, rgba(15, 43, 73, 0.88) 100%)";
 
-  const barBorder = "none";
+  const barBorder = scrolled
+    ? "1px solid rgba(255, 255, 255, 0.25)"
+    : "1px solid rgba(255, 255, 255, 0.15)";
 
   return (
     <>
@@ -89,10 +90,10 @@ export default function Navbar() {
               backdropFilter: "blur(20px)",
               WebkitBackdropFilter: "blur(20px)",
               border: barBorder,
-              borderRadius: "100px",
+              borderRadius: "14px",
               boxShadow: scrolled
-                ? "0 12px 30px rgba(15,23,42,0.08), 0 0 0 1px rgba(255,153,0,0.08)"
-                : "0 4px 20px rgba(15,23,42,0.02), 0 0 0 1px rgba(255,153,0,0.04)",
+                ? "0 16px 40px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,153,0,0.05)"
+                : "0 6px 24px rgba(0,0,0,0.15), 0 0 0 1px rgba(255,153,0,0.02)",
               transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
               outline: "none",
               outlineOffset: 0,
@@ -120,10 +121,10 @@ export default function Navbar() {
                 />
               </motion.div>
               <div style={{ display: "flex", flexDirection: "column", outline: "none" }}>
-                <span style={{ fontWeight: 800, fontSize: "14px", color: "#1e2d3d", lineHeight: 1.2, letterSpacing: "-0.01em", whiteSpace: "nowrap" }}>
+                <span style={{ fontWeight: 800, fontSize: "14px", color: "#ffffff", lineHeight: 1.2, letterSpacing: "-0.01em", whiteSpace: "nowrap" }}>
                   AWS SBG REC
                 </span>
-                <span style={{ fontSize: "9px", color: "#9ca3af", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em", whiteSpace: "nowrap" }}>
+                <span style={{ fontSize: "9px", color: "rgba(255, 255, 255, 0.7)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", whiteSpace: "nowrap" }}>
                   Student Builders Group
                 </span>
               </div>
@@ -142,7 +143,7 @@ export default function Navbar() {
                   justifyContent: "center",
                   padding: "6px",
                   marginLeft: "4px",
-                  color: "#1e2d3d",
+                  color: "rgba(255, 255, 255, 0.85)",
                   outline: "none",
                   outlineOffset: 0,
                 }}
@@ -178,10 +179,10 @@ export default function Navbar() {
                 backdropFilter: "blur(20px)",
                 WebkitBackdropFilter: "blur(20px)",
                 border: barBorder,
-                borderRadius: "100px",
+                borderRadius: "14px",
                 boxShadow: scrolled
-                ? "0 12px 30px rgba(15,23,42,0.08), 0 0 0 1px rgba(255,153,0,0.08)"
-                : "0 4px 20px rgba(15,23,42,0.02), 0 0 0 1px rgba(255,153,0,0.04)",
+                  ? "0 16px 40px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,153,0,0.05)"
+                  : "0 6px 24px rgba(0,0,0,0.15), 0 0 0 1px rgba(255,153,0,0.02)",
                 transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                 outline: "none",
                 outlineOffset: 0,
@@ -197,7 +198,7 @@ export default function Navbar() {
                     position: "relative",
                     fontSize: "13px",
                     fontWeight: 600,
-                    color: hoveredIdx === idx ? "#FF9900" : "#4b5563",
+                    color: hoveredIdx === idx ? "#FF9900" : "rgba(255, 255, 255, 0.85)",
                     textDecoration: "none",
                     padding: "7px 14px",
                     borderRadius: "8px",
@@ -241,10 +242,10 @@ export default function Navbar() {
               backdropFilter: "blur(20px)",
               WebkitBackdropFilter: "blur(20px)",
               border: barBorder,
-              borderRadius: "100px",
+              borderRadius: "14px",
               boxShadow: scrolled
-                ? "0 12px 30px rgba(15,23,42,0.08), 0 0 0 1px rgba(255,153,0,0.08)"
-                : "0 4px 20px rgba(15,23,42,0.02), 0 0 0 1px rgba(255,153,0,0.04)",
+                ? "0 16px 40px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,153,0,0.05)"
+                : "0 6px 24px rgba(0,0,0,0.15), 0 0 0 1px rgba(255,153,0,0.02)",
               transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
               outline: "none",
               outlineOffset: 0,
@@ -253,17 +254,17 @@ export default function Navbar() {
             <motion.button
               whileHover={{
                 scale: 1.02,
-                borderColor: "#1e2d3d",
-                color: "#1e2d3d",
-                backgroundColor: "rgba(30, 45, 61, 0.04)"
+                borderColor: "#ffffff",
+                color: "#ffffff",
+                backgroundColor: "rgba(255, 255, 255, 0.12)"
               }}
               whileTap={{ scale: 0.96 }}
               style={{
                 padding: isMobile ? "6px 12px" : "8px 18px",
-                borderRadius: "100px",
-                border: "1.5px solid rgba(30, 45, 61, 0.15)",
+                borderRadius: "10px",
+                border: "1.5px solid rgba(255, 255, 255, 0.25)",
                 background: "transparent",
-                color: "#4b5563",
+                color: "rgba(255, 255, 255, 0.85)",
                 fontSize: isMobile ? "12px" : "13px",
                 fontWeight: 700,
                 cursor: "pointer",
@@ -279,16 +280,16 @@ export default function Navbar() {
             <motion.button
               whileHover={{
                 y: -2,
-                boxShadow: "0 8px 24px rgba(255,153,0,.4)",
-                background: "linear-gradient(135deg,#FFB020,#FF9900)"
+                boxShadow: "0 8px 24px rgba(255,153,0,.45)",
+                background: "linear-gradient(135deg, #FFaa00, #FF7700)"
               }}
               whileTap={{ scale: 0.96 }}
               style={{
                 padding: isMobile ? "7px 14px" : "9px 22px",
-                borderRadius: "100px",
+                borderRadius: "10px",
                 border: "none",
-                background: "linear-gradient(135deg,#FF9900,#E68900)",
-                color: "#1e2d3d",
+                background: "linear-gradient(135deg, #FF9900, #FF6600)",
+                color: "#031C36",
                 fontSize: isMobile ? "12px" : "13px",
                 fontWeight: 800,
                 cursor: "pointer",
@@ -296,7 +297,7 @@ export default function Navbar() {
                 outline: "none",
                 outlineOffset: 0,
                 whiteSpace: "nowrap",
-                boxShadow: "0 4px 16px rgba(255,153,0,.3), 0 2px 6px rgba(255,153,0,.2)",
+                boxShadow: "0 4px 16px rgba(255, 153, 0, 0.25)",
                 transition: "background 0.2s ease, y 0.2s ease, box-shadow 0.2s ease",
               }}
             >
@@ -317,13 +318,13 @@ export default function Navbar() {
                   top: "66px",
                   left: "24px",
                   right: "24px",
-                  background: "rgba(255, 255, 255, 0.95)",
+                  background: "rgba(3, 28, 54, 0.98)",
                   backdropFilter: "blur(24px)",
                   WebkitBackdropFilter: "blur(24px)",
-                  border: "1px solid rgba(35, 47, 62, 0.12)",
-                  borderRadius: "24px",
+                  border: "1px solid rgba(255, 255, 255, 0.15)",
+                  borderRadius: "14px",
                   padding: "16px 8px",
-                  boxShadow: "0 20px 40px rgba(15, 23, 42, 0.12)",
+                  boxShadow: "0 20px 40px rgba(0, 0, 0, 0.4)",
                   display: "flex",
                   flexDirection: "column",
                   gap: "4px",
@@ -339,7 +340,7 @@ export default function Navbar() {
                     style={{
                       fontSize: "14px",
                       fontWeight: 600,
-                      color: "#4b5563",
+                      color: "rgba(255, 255, 255, 0.85)",
                       textDecoration: "none",
                       padding: "10px 20px",
                       borderRadius: "12px",
@@ -349,12 +350,12 @@ export default function Navbar() {
                       outlineOffset: 0,
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.background = "rgba(255, 153, 0, 0.08)";
+                      e.currentTarget.style.background = "rgba(255, 255, 255, 0.12)";
                       e.currentTarget.style.color = "#FF9900";
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.background = "transparent";
-                      e.currentTarget.style.color = "#4b5563";
+                      e.currentTarget.style.color = "rgba(255, 255, 255, 0.85)";
                     }}
                   >
                     {link.label}
@@ -366,41 +367,41 @@ export default function Navbar() {
         </div>
       </motion.nav>
 
-      {/* Purple glow blob (center top) */}
+      {/* Ambient orange glow blob (center top) */}
       <div
         style={{
           position: "fixed",
           top: 0,
-          left: "25%",
-          width: "50%",
-          height: "140px",
-          background: "radial-gradient(ellipse at 50% 5%, rgba(130,68,239,.18) 0%, rgba(130,68,239,.07) 35%, rgba(255,255,255,0) 65%)",
+          left: "20%",
+          width: "60%",
+          height: "180px",
+          background: "radial-gradient(ellipse at 50% 5%, rgba(255,153,0,.22) 0%, rgba(255,153,0,.1) 35%, rgba(255,255,255,0) 65%)",
           pointerEvents: "none",
           zIndex: 898,
         }}
       />
-      {/* Left orange glow blob */}
+      {/* Left slate glow blob */}
       <div
         style={{
           position: "fixed",
           top: 0,
           left: 0,
-          width: "40%",
-          height: "140px",
-          background: "radial-gradient(ellipse at 5% 5%, rgba(255,153,0,.22) 0%, rgba(255,153,0,.1) 35%, rgba(255,255,255,0) 65%)",
+          width: "35%",
+          height: "160px",
+          background: "radial-gradient(ellipse at 5% 5%, rgba(35,47,62,.08) 0%, rgba(35,47,62,.03) 35%, rgba(255,255,255,0) 65%)",
           pointerEvents: "none",
           zIndex: 898,
         }}
       />
-      {/* Right blue glow blob */}
+      {/* Right orange glow blob */}
       <div
         style={{
           position: "fixed",
           top: 0,
           right: 0,
-          width: "40%",
-          height: "140px",
-          background: "radial-gradient(ellipse at 95% 5%, rgba(0,115,187,.16) 0%, rgba(0,115,187,.07) 35%, rgba(255,255,255,0) 65%)",
+          width: "35%",
+          height: "160px",
+          background: "radial-gradient(ellipse at 95% 5%, rgba(255,153,0,.18) 0%, rgba(255,153,0,.08) 35%, rgba(255,255,255,0) 65%)",
           pointerEvents: "none",
           zIndex: 898,
         }}

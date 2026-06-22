@@ -8,7 +8,6 @@ const COLS = [
     links: [
       { label: "Home", href: "/#home" },
       { label: "About Us", href: "/#about" },
-      { label: "Events", href: "/#events" },
       { label: "Gallery", href: "/#gallery" }
     ]
   },
@@ -35,7 +34,7 @@ export default function Footer() {
     <footer
       style={{
         width: "100vw",
-        background: "linear-gradient(160deg, #FAFAF8 0%, #F8F9FA 50%, #F5F5F7 100%)",
+        background: "#232F3E",
         borderTop: "2px solid transparent",
         backgroundClip: "padding-box",
         padding: "72px 0",
@@ -43,7 +42,8 @@ export default function Footer() {
         zIndex: 30,
         overflow: "hidden",
       }}>
-      <div style={{ position:"absolute", top:0, left:0, right:0, height:"2px", background:"linear-gradient(90deg, #FF9900 0%, rgb(130,68,239) 50%, #0073BB 100%)", zIndex:1 }} />
+      {/* Top accent line */}
+      <div style={{ position:"absolute", top:0, left:0, right:0, height:"2px", background:"linear-gradient(90deg, #FF9900 0%, #FF9900 100%)", zIndex:1 }} />
       <div
         style={{
           width: "100%",
@@ -90,16 +90,16 @@ export default function Footer() {
                 </svg>
               </motion.div>
               <div>
-                <div style={{ fontWeight: 800, fontSize: "13px", color: "#1e2d3d", lineHeight: 1.2 }}>
+                <div style={{ fontWeight: 800, fontSize: "13px", color: "#FFFFFF", lineHeight: 1.2 }}>
                   AWS SBG REC
                 </div>
-                <div style={{ fontSize: "9px", color: "#9ca3af" }}>
+                <div style={{ fontSize: "9px", color: "#94A3B8" }}>
                   Student Builders Group
                 </div>
               </div>
             </div>
             
-            <p style={{ fontSize: "12px", color: "#6b7280", lineHeight: 1.75, maxWidth: "240px", marginBottom: "20px" }}>
+            <p style={{ fontSize: "12px", color: "#94A3B8", lineHeight: 1.75, maxWidth: "240px", marginBottom: "20px" }}>
               Empowering the next generation of cloud professionals through community, learning, and innovation.
             </p>
 
@@ -121,15 +121,15 @@ export default function Footer() {
                   title={s.label}
                   onMouseEnter={() => si === 0 ? setHov1(true) : setHov2(true)}
                   onMouseLeave={() => si === 0 ? setHov1(false) : setHov2(false)}
-                  whileHover={{ backgroundColor: "rgb(130,68,239)", y: -2 }}
+                  whileHover={{ backgroundColor: "#FF9900", y: -3 }}
                   transition={{ type: "spring", stiffness: 300, damping: 15 }}
                   style={{
                     width: "34px",
                     height: "34px",
-                    background: "rgba(130,68,239,.1)",
-                    border: "1px solid rgba(130,68,239,.22)",
+                    background: "rgba(255,153,0,.15)",
+                    border: "1px solid rgba(255,153,0,.3)",
                     borderRadius: "10px",
-                    boxShadow: "inset 0 1px 0 rgba(255,255,255,.8)",
+                    boxShadow: "inset 0 1px 0 rgba(255,255,255,.1)",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -137,7 +137,7 @@ export default function Footer() {
                     transition: "background-color 0.2s ease",
                   }}
                 >
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill={si === 0 ? (hov1 ? "#ffffff" : "rgb(130,68,239)") : (hov2 ? "#ffffff" : "rgb(130,68,239)")}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill={si === 0 ? (hov1 ? "#ffffff" : "#FF9900") : (hov2 ? "#ffffff" : "#FF9900")}>
                     <path d={s.path} />
                   </svg>
                 </motion.a>
@@ -152,7 +152,7 @@ export default function Footer() {
                 style={{
                   fontWeight: 800,
                   fontSize: "12px",
-                  color: "#232F3E",
+                  color: "#FFFFFF",
                   marginBottom: "16px",
                   textTransform: "uppercase",
                   letterSpacing: "0.08em",
@@ -164,11 +164,11 @@ export default function Footer() {
                 <motion.a
                   key={link.label}
                   href={link.href}
-                  whileHover={{ color: "rgb(130,68,239)", x: 4 }}
+                  whileHover={{ color: "#FF9900", x: 5 }}
                   transition={{ duration: 0.18, ease: "easeOut" }}
                   style={{
                     display: "block",
-                    color: "#6b7280",
+                    color: "#94A3B8",
                     fontSize: "12px",
                     fontWeight: 600,
                     textDecoration: "none",
@@ -190,12 +190,12 @@ export default function Footer() {
             alignItems: "center",
             justifyContent: "space-between",
             paddingTop: "24px",
-            borderTop: "1px solid rgba(35,47,62,.08)",
+            borderTop: "1px solid rgba(255,255,255,.1)",
             flexWrap: "wrap",
             gap: "16px",
           }}
         >
-          <div style={{ fontSize: "11px", color: "#9ca3af", fontWeight: 500 }}>
+          <div style={{ fontSize: "11px", color: "#94A3B8", fontWeight: 500 }}>
             © 2026 AWS Student Builders Group REC. All rights reserved.
           </div>
           <div style={{ display: "flex", gap: "16px" }}>
@@ -203,11 +203,11 @@ export default function Footer() {
               <a
                 key={text}
                 href="#"
-                onMouseEnter={e => e.currentTarget.style.color = "rgb(130,68,239)"}
-                onMouseLeave={e => e.currentTarget.style.color = "#9ca3af"}
+                onMouseEnter={e => e.currentTarget.style.color = "#FF9900"}
+                onMouseLeave={e => e.currentTarget.style.color = "#94A3B8"}
                 style={{
                   fontSize: "11px",
-                  color: "#9ca3af",
+                  color: "#94A3B8",
                   textDecoration: "none",
                   fontWeight: 500,
                   transition: "color 0.2s ease",

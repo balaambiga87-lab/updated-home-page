@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap');
 
 *, *::before, *::after {
   box-sizing: border-box;
@@ -8,7 +9,7 @@ html, body, #__next {
   margin: 0;
   padding: 0;
   width: 100%;
-  overflow-x: hidden;
+  overflow-x: clip;
   scroll-behavior: smooth;
 }
 body {
@@ -22,6 +23,32 @@ body {
 ::-webkit-scrollbar{width:5px;}
 ::-webkit-scrollbar-track{background:#FDFCFB;}
 ::-webkit-scrollbar-thumb{background:rgba(255,153,0,.4);border-radius:4px;}
+
+/* ── Liquid Glass CSS ── */
+.liquid-glass {
+  background: rgba(255, 255, 255, 0.01);
+  background-blend-mode: luminosity;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border: none;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.liquid-glass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.4px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.15) 20%, rgba(255,255,255,0) 40%, rgba(255,255,255,0) 60%, rgba(255,255,255,0.15) 80%, rgba(255,255,255,0.45) 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
 
 /* ── AWS-style gradient background (like screenshot) ── */
 .aws-grad-bg {
@@ -73,6 +100,7 @@ body {
 @keyframes gradShift  { 0%,100%{background-position:0% center} 50%{background-position:100% center} }
 @keyframes shimmer    { 0%{background-position:-300px 0} 100%{background-position:300px 0} }
 @keyframes marquee    { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+@keyframes marquee-pixel { from{transform:translateX(calc(-1 * var(--marquee-offset)))} to{transform:translateX(0)} }
 @keyframes blink      { 0%,100%{opacity:1} 50%{opacity:0} }
 @keyframes float      { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
 @keyframes floatB     { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
@@ -191,6 +219,99 @@ body {
     rgba(255,153,0,.22) 75%,
     transparent 100%
   );
+}
+
+/* ── Ambient Glow Blobs ── */
+.ambient-orange {
+  background: radial-gradient(circle at 30% 20%, rgba(255,153,0,.28) 0%, rgba(255,153,0,.12) 30%, transparent 65%);
+  filter: blur(60px);
+}
+.ambient-slate {
+  background: radial-gradient(circle at 70% 80%, rgba(35,47,62,.1) 0%, rgba(35,47,62,.04) 30%, transparent 65%);
+  filter: blur(60px);
+}
+.ambient-mixed {
+  background: radial-gradient(circle at 20% 30%, rgba(255,153,0,.18) 0%, rgba(35,47,62,.06) 40%, transparent 70%);
+  filter: blur(60px);
+}
+
+/* ── Premium Glass Card ── */
+.glass-premium {
+  background: linear-gradient(160deg, rgba(255,255,255,0.96) 0%, rgba(255,255,255,0.88) 50%, rgba(255,255,255,0.94) 100%);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255,255,255,0.9);
+  box-shadow:
+    0 0 0 1px rgba(255,153,0,0.06),
+    0 4px 24px rgba(255,153,0,0.04),
+    0 20px 60px rgba(35,47,62,0.03),
+    inset 0 1px 0 rgba(255,255,255,1);
+}
+
+/* ── Premium Shadow Tiers ── */
+.shadow-sm-premium {
+  box-shadow: 0 1px 3px rgba(35,47,62,0.04), 0 0 0 1px rgba(255,153,0,0.03);
+}
+.shadow-md-premium {
+  box-shadow: 0 4px 16px rgba(35,47,62,0.05), 0 0 0 1px rgba(255,153,0,0.05), inset 0 1px 0 rgba(255,255,255,1);
+}
+.shadow-lg-premium {
+  box-shadow: 0 12px 40px rgba(35,47,62,0.06), 0 0 0 1px rgba(255,153,0,0.07), 0 4px 20px rgba(255,153,0,0.03), inset 0 1px 0 rgba(255,255,255,1);
+}
+.shadow-xl-premium {
+  box-shadow: 0 24px 60px rgba(35,47,62,0.08), 0 0 0 1px rgba(255,153,0,0.08), 0 8px 30px rgba(255,153,0,0.04), inset 0 1px 0 rgba(255,255,255,1);
+}
+
+/* ── Glow Border Ring ── */
+.glow-ring-orange {
+  box-shadow:
+    0 0 0 1px rgba(255,153,0,0.12),
+    0 0 20px rgba(255,153,0,0.06),
+    0 4px 20px rgba(255,153,0,0.04),
+    inset 0 1px 0 rgba(255,255,255,1);
+}
+.glow-ring-orange:hover {
+  box-shadow:
+    0 0 0 2px rgba(255,153,0,0.2),
+    0 0 30px rgba(255,153,0,0.12),
+    0 8px 28px rgba(255,153,0,0.06),
+    inset 0 1px 0 rgba(255,255,255,1);
+}
+
+/* ── Ambient Top Glow ── */
+.ambient-top-glow::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 10%; right: 10%;
+  height: 1px;
+  background: linear-gradient(
+    90deg, transparent,
+    rgba(255,255,255,0.98) 35%,
+    rgba(255,255,255,1) 50%,
+    rgba(255,255,255,0.98) 65%,
+    transparent
+  );
+  border-radius: 1px;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* ── Cloud-inspired Mesh Gradient ── */
+.mesh-cloud {
+  background:
+    radial-gradient(ellipse at 15% 20%, rgba(255,153,0,.05) 0%, transparent 55%),
+    radial-gradient(ellipse at 85% 80%, rgba(0,115,187,.04) 0%, transparent 55%),
+    radial-gradient(ellipse at 50% 50%, rgba(255,255,255,0) 0%, transparent 100%);
+}
+
+/* ── Slate Orange Gradient Text ── */
+.grad-text-slate-orange {
+  background: linear-gradient(90deg, #232F3E, #FF9900, #232F3E);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradShift 6s ease infinite;
 }
 
 /* ── Prevent fixed header cutoff on landing page sections ── */

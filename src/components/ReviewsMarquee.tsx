@@ -1,24 +1,47 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import { REVIEWS } from "@/lib/reviewsData";
 
-const StarRating = ({ color }: { color: string }) => (
-  <div style={{ display: "flex", gap: 2 }}>
-    {[...Array(5)].map((_, i) => (
-      <svg key={i} width="12" height="12" viewBox="0 0 24 24" fill={color} stroke={color} strokeWidth="2">
-        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+const ReviewIcon = ({ tag, color }: { tag: string; color: string }) => {
+  if (tag === "Cloud Basics") {
+    return (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z" />
       </svg>
-    ))}
-  </div>
-);
+    );
+  }
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="11" width="18" height="10" rx="2" />
+      <circle cx="12" cy="5" r="2" />
+      <path d="M12 7v4" />
+      <line x1="8" y1="16" x2="8" y2="16" />
+      <line x1="16" y1="16" x2="16" y2="16" />
+    </svg>
+  );
+};
+
+const GAP = 28;
 
 export default function ReviewsMarquee() {
   const [isPaused, setIsPaused] = useState(false);
-  
-  // Filtering out grid reviews to display in the marquee
+  const [trackOffset, setTrackOffset] = useState(0);
+  const firstHalfRef = useRef<HTMLDivElement>(null);
   const marqueeReviews = REVIEWS.filter(r => !r.featured);
+
+  const measure = useCallback(() => {
+    if (firstHalfRef.current) {
+      setTrackOffset(firstHalfRef.current.offsetWidth + GAP);
+    }
+  }, []);
+
+  useEffect(() => {
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, [measure, marqueeReviews.length]);
 
   return (
     <section
@@ -33,11 +56,9 @@ export default function ReviewsMarquee() {
         scrollMarginTop: "100px",
       }}
     >
-      {/* Background Glows */}
-      <div style={{ position: "absolute", top: "-10%", left: "5%", width: "40vw", height: "40vw", borderRadius: "50%", background: "radial-gradient(circle,rgba(255,153,0,.08) 0%,transparent 70%)", filter: "blur(80px)", pointerEvents: "none" }} />
-      <div style={{ position: "absolute", bottom: "-10%", right: "5%", width: "40vw", height: "40vw", borderRadius: "50%", background: "radial-gradient(circle,rgba(255,153,0,0.08) 0%,transparent 70%)", filter: "blur(80px)", pointerEvents: "none" }} />
+      <div style={{ position: "absolute", top: "-10%", left: "5%", width: "45vw", height: "45vw", borderRadius: "50%", background: "radial-gradient(circle,rgba(255,153,0,.1) 0%,rgba(255,153,0,.03) 30%,transparent 70%)", filter: "blur(80px)", pointerEvents: "none" }} />
+      <div style={{ position: "absolute", bottom: "-10%", right: "5%", width: "40vw", height: "40vw", borderRadius: "50%", background: "radial-gradient(circle,rgba(35,47,62,.05) 0%,rgba(35,47,62,.02) 30%,transparent 70%)", filter: "blur(80px)", pointerEvents: "none" }} />
 
-      {/* Header */}
       <div style={{ textAlign: "center", marginBottom: 36, padding: "0 24px" }}>
         <h2 style={{ 
           fontSize: "clamp(26px, 3.5vw, 36px)", 
@@ -63,9 +84,6 @@ export default function ReviewsMarquee() {
         </p>
       </div>
 
-
-
-      {/* Sliding Marquee Container */}
       <div
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
@@ -77,89 +95,91 @@ export default function ReviewsMarquee() {
           padding: "20px 0",
         }}
       >
-          {/* Edge Fade Gradients */}
-        <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: "120px", background: "linear-gradient(90deg, #FFFFFF, transparent)", zIndex: 5, pointerEvents: "none" }} />
+        <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: "120px", background: "linear-gradient(90deg, #FFFDF9, transparent)", zIndex: 5, pointerEvents: "none" }} />
         <div style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: "120px", background: "linear-gradient(270deg, #FFFDF9, transparent)", zIndex: 5, pointerEvents: "none" }} />
-        {/* Purple Glow Edge */}
-        <div style={{ position: "absolute", left: "15%", top: "-10px", width: "200px", height: "60px", background: "radial-gradient(ellipse, rgba(130,68,239,.08) 0%, transparent 70%)", filter: "blur(20px)", pointerEvents: "none", zIndex: 1 }} />
 
-        {/* Marquee Track */}
         <div
           style={{
             display: "flex",
-            gap: 28,
+            gap: GAP,
             width: "max-content",
-            animation: "marquee 45s linear infinite",
+            ["--marquee-offset" as string]: `${trackOffset}px`,
+            animation: trackOffset > 0 ? `marquee-pixel 20s linear infinite` : "none",
             animationPlayState: isPaused ? "paused" : "running",
           }}
         >
-          {/* Double map to allow seamless looping */}
-          {[...marqueeReviews, ...marqueeReviews].map((review, idx) => (
-            <motion.div
-              key={idx}
-              whileHover={{ y: -6, scale: 1.02, boxShadow: `0 20px 40px rgba(15,23,42,0.06), 0 0 0 1px ${review.color}25, 0 12px 30px ${review.color}08` }}
-              style={{
-                width: 340,
-                height: 250,
-                background: "rgba(255, 255, 255, 0.85)",
-                backdropFilter: "blur(16px)",
-                border: "1.5px solid rgba(35, 47, 62, 0.07)",
-                borderRadius: 24,
-                boxShadow: "0 0 0 1px rgba(255,153,0,.04), inset 0 1px 0 rgba(255,255,255,.95)",
-                padding: "20px 24px",
-                display: "flex",
-                flexDirection: "column",
-                gap: 12,
-                cursor: "pointer",
-                transition: "all 0.35s ease",
-                position: "relative",
-              }}
-            >
-              {/* Card Top Banner Glow */}
-              <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3.5, background: `linear-gradient(90deg, ${review.color}, ${review.color}88)`, borderRadius: "3px 3px 0 0" }} />
-
-              <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-                <div style={{
-                  width: 44, height: 44, borderRadius: "50%",
-                  background: `linear-gradient(135deg, ${review.color}, ${review.color}88)`,
-                  boxShadow: `0 0 0 2px ${review.color}22`,
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  fontSize: 15, fontWeight: 700, color: "#FFFFFF", flexShrink: 0
-                }}>
-                  {review.initials}
+          {/* Second half — starts visible on left */}
+          <div style={{ display: "flex", gap: GAP }}>
+            {marqueeReviews.map((review, idx) => (
+              <motion.div
+                key={`b-${idx}`}
+                whileHover={{ y: -8, scale: 1.03, boxShadow: `0 0 30px ${review.color}30, 0 0 60px ${review.color}15, 0 28px 56px rgba(15,23,42,0.08), 0 0 0 1px ${review.color}30` }}
+                style={{
+                  width: 340,
+                  height: 250,
+                  background: "#FFFFFF",
+                  borderRadius: 20,
+                  boxShadow: `0 0 20px ${review.color}12, 0 0 40px ${review.color}06, 0 2px 20px rgba(0,0,0,0.04), 0 0 0 1px ${review.color}15`,
+                  padding: "28px 28px 24px",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 14,
+                  cursor: "pointer",
+                  transition: "all 0.35s ease",
+                  position: "relative",
+                  overflow: "hidden",
+                  flexShrink: 0,
+                }}
+              >
+                <div style={{ position: "absolute", top: -30, left: -30, width: 160, height: 160, borderRadius: "50%", background: `radial-gradient(circle, ${review.color}18 0%, ${review.color}05 40%, transparent 70%)`, filter: "blur(25px)", pointerEvents: "none" }} />
+                <div style={{ position: "absolute", top: -40, right: -40, width: 140, height: 140, borderRadius: "50%", background: `linear-gradient(135deg, ${review.color}15 0%, ${review.color}08 100%)`, pointerEvents: "none" }} />
+                <div style={{ width: 48, height: 48, borderRadius: 12, background: `${review.color}12`, border: `1px solid ${review.color}20`, display: "flex", alignItems: "center", justifyContent: "center", position: "relative", zIndex: 1 }}>
+                  <ReviewIcon tag={review.tag} color={review.color} />
                 </div>
-                <div>
-                  <h4 style={{ margin: "0 0 2px 0", fontSize: 15, fontWeight: 700, color: "#1E293B" }}>{review.name}</h4>
-                  <p style={{ margin: 0, fontSize: 12, color: "#64748B", fontWeight: 500 }}>{review.role}</p>
+                <div style={{ position: "relative", zIndex: 1 }}>
+                  <h4 style={{ margin: 0, fontSize: 20, fontWeight: 800, color: "#1E293B", letterSpacing: "-0.01em" }}>{review.name}</h4>
+                  <p style={{ margin: "4px 0 0 0", fontSize: 12, fontWeight: 600, color: review.color }}>{review.role}</p>
                 </div>
-              </div>
-
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                <StarRating color={review.color} />
-                <span style={{
-                  background: `${review.color}08`, border: `1px solid ${review.color}20`,
-                  color: review.color, borderRadius: 100, padding: "3px 10px",
-                  fontSize: 10, fontWeight: 700,
-                }}>
-                  {review.tag}
-                </span>
-              </div>
-
-              <p style={{
-                margin: 0,
-                fontSize: 13,
-                color: "#475569",
-                lineHeight: 1.5,
-                overflow: "hidden",
-                display: "-webkit-box",
-                WebkitLineClamp: 4,
-                WebkitBoxOrient: "vertical",
-                textOverflow: "ellipsis",
-              }}>
-                "{review.text}"
-              </p>
-            </motion.div>
-          ))}
+                <p style={{ margin: 0, fontSize: 14, color: "#64748B", lineHeight: 1.6, position: "relative", zIndex: 1, flex: 1 }}>{review.text}</p>
+              </motion.div>
+            ))}
+          </div>
+          {/* First half — slides in from left */}
+          <div ref={firstHalfRef} style={{ display: "flex", gap: GAP }}>
+            {marqueeReviews.map((review, idx) => (
+              <motion.div
+                key={`a-${idx}`}
+                whileHover={{ y: -8, scale: 1.03, boxShadow: `0 0 30px ${review.color}30, 0 0 60px ${review.color}15, 0 28px 56px rgba(15,23,42,0.08), 0 0 0 1px ${review.color}30` }}
+                style={{
+                  width: 340,
+                  height: 250,
+                  background: "#FFFFFF",
+                  borderRadius: 20,
+                  boxShadow: `0 0 20px ${review.color}12, 0 0 40px ${review.color}06, 0 2px 20px rgba(0,0,0,0.04), 0 0 0 1px ${review.color}15`,
+                  padding: "28px 28px 24px",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 14,
+                  cursor: "pointer",
+                  transition: "all 0.35s ease",
+                  position: "relative",
+                  overflow: "hidden",
+                  flexShrink: 0,
+                }}
+              >
+                <div style={{ position: "absolute", top: -30, left: -30, width: 160, height: 160, borderRadius: "50%", background: `radial-gradient(circle, ${review.color}18 0%, ${review.color}05 40%, transparent 70%)`, filter: "blur(25px)", pointerEvents: "none" }} />
+                <div style={{ position: "absolute", top: -40, right: -40, width: 140, height: 140, borderRadius: "50%", background: `linear-gradient(135deg, ${review.color}15 0%, ${review.color}08 100%)`, pointerEvents: "none" }} />
+                <div style={{ width: 48, height: 48, borderRadius: 12, background: `${review.color}12`, border: `1px solid ${review.color}20`, display: "flex", alignItems: "center", justifyContent: "center", position: "relative", zIndex: 1 }}>
+                  <ReviewIcon tag={review.tag} color={review.color} />
+                </div>
+                <div style={{ position: "relative", zIndex: 1 }}>
+                  <h4 style={{ margin: 0, fontSize: 20, fontWeight: 800, color: "#1E293B", letterSpacing: "-0.01em" }}>{review.name}</h4>
+                  <p style={{ margin: "4px 0 0 0", fontSize: 12, fontWeight: 600, color: review.color }}>{review.role}</p>
+                </div>
+                <p style={{ margin: 0, fontSize: 14, color: "#64748B", lineHeight: 1.6, position: "relative", zIndex: 1, flex: 1 }}>{review.text}</p>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </div>
     </section>

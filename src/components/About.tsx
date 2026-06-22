@@ -26,6 +26,7 @@ export default function About() {
         position: "relative",
         overflow: "hidden",
         scrollMarginTop: "100px",
+        zIndex: 2,
       }}
     >
       <div
@@ -53,24 +54,24 @@ export default function About() {
           {/* Main Card: Storytelling & Journey merged */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             style={{ display: "flex", flexDirection: "column", width: "100%" }}
           >
             <motion.div
               whileHover={{ 
-                y: -6, 
-                boxShadow: "0 30px 60px rgba(35,47,62,.06), 0 0 0 2px rgba(255,153,0,.14), 0 0 24px rgba(255,153,0,.1)",
-                borderColor: "rgba(255,153,0,.2)"
+                y: -8, 
+                boxShadow: "0 40px 80px rgba(35,47,62,.08), 0 0 0 2px rgba(255,153,0,.18), 0 0 30px rgba(255,153,0,.12), 0 12px 40px rgba(255,153,0,.06)",
+                borderColor: "rgba(255,153,0,.25)"
               }}
               transition={{ type: "spring", stiffness: 300, damping: 22 }}
               style={{
-                background: "linear-gradient(160deg,rgba(255,255,255,1) 0%,rgba(255,255,255,.97) 50%,rgba(255,249,240,.92) 100%)",
+                background: "linear-gradient(160deg,rgba(255,255,255,1) 0%,rgba(255,255,255,.95) 40%,rgba(255,249,240,.88) 70%,rgba(245,250,255,.85) 100%)",
                 backdropFilter: "blur(24px)",
                 WebkitBackdropFilter: "blur(24px)",
                 borderRadius: "32px",
-                border: "1px solid rgba(255,255,255,.95)",
-                boxShadow: "0 0 0 1px rgba(255,153,0,.07), 0 4px 24px rgba(255,153,0,.06), 0 20px 48px rgba(35,47,62,.03), inset 0 1px 0 rgba(255,255,255,1)",
+                border: "1px solid rgba(255,255,255,.98)",
+                boxShadow: "0 0 0 1px rgba(255,153,0,.08), 0 4px 24px rgba(255,153,0,.06), 0 24px 64px rgba(35,47,62,.04), 0 8px 30px rgba(255,153,0,.03), inset 0 1px 0 rgba(255,255,255,1)",
                 padding: isMobile ? "24px 16px" : "56px 60px",
                 display: "flex",
                 flexDirection: "column",
@@ -93,44 +94,47 @@ export default function About() {
                 zIndex: 1,
               }} />
 
-              {/* Spotlight Glows */}
+              {/* Enhanced spotlight glows */}
               <div
                 style={{
                   position: "absolute",
-                  top: "-80px",
-                  left: "-80px",
-                  width: "380px",
-                  height: "380px",
+                  top: "-100px",
+                  left: "-100px",
+                  width: "450px",
+                  height: "450px",
                   borderRadius: "50%",
-                  background: "radial-gradient(circle, rgba(255,153,0,.1) 0%, transparent 70%)",
+                  background: "radial-gradient(circle, rgba(255,153,0,.12) 0%, rgba(255,153,0,.05) 30%, transparent 70%)",
                   pointerEvents: "none",
                   zIndex: 1,
+                  filter: "blur(40px)",
                 }}
               />
               <div
                 style={{
                   position: "absolute",
-                  bottom: "-80px",
-                  right: "-80px",
-                  width: "380px",
-                  height: "380px",
+                  bottom: "-100px",
+                  right: "-100px",
+                  width: "450px",
+                  height: "450px",
                   borderRadius: "50%",
-                  background: "radial-gradient(circle, rgba(255, 153, 0, 0.2) 0%, transparent 70%)",
+                  background: "radial-gradient(circle, rgba(255, 153, 0, 0.22) 0%, rgba(255, 153, 0, 0.08) 30%, transparent 70%)",
                   pointerEvents: "none",
                   zIndex: 1,
+                  filter: "blur(40px)",
                 }}
               />
               <div
                 style={{
                   position: "absolute",
-                  top: "-40px",
-                  right: "-40px",
-                  width: "260px",
-                  height: "260px",
+                  top: "-60px",
+                  right: "-60px",
+                  width: "320px",
+                  height: "320px",
                   borderRadius: "50%",
-                  background: "radial-gradient(circle, rgba(255, 153, 0, 0.1) 0%, transparent 70%)",
+                  background: "radial-gradient(circle, rgba(35,47,62,.04) 0%, transparent 70%)",
                   pointerEvents: "none",
                   zIndex: 1,
+                  filter: "blur(40px)",
                 }}
               />
               <div
@@ -138,20 +142,20 @@ export default function About() {
                   display: "inline-flex",
                   alignItems: "center",
                   gap: "8px",
-                  background: "linear-gradient(135deg,rgba(130,68,239,.1),rgba(255,153,0,.05))",
-                  border: "1px solid rgba(130,68,239,.22)",
+                  background: "linear-gradient(135deg,rgba(255,153,0,.12),rgba(255,153,0,.05))",
+                  border: "1px solid rgba(255,153,0,.22)",
                   borderRadius: "100px",
                   padding: "6px 16px",
                   position: "relative",
                   zIndex: 2,
-                  boxShadow: "0 0 10px rgba(130,68,239,.08), inset 0 1px 0 rgba(255,255,255,.8)",
+                  boxShadow: "0 0 12px rgba(255,153,0,.08), inset 0 1px 0 rgba(255,255,255,.8)",
                 }}
               >
                 <span
                   style={{
                     fontSize: "10px",
                     fontWeight: 800,
-                    color: "rgb(130,68,239)",
+                    color: "#FF9900",
                     textTransform: "uppercase",
                     letterSpacing: "0.1em",
                   }}
@@ -170,6 +174,8 @@ export default function About() {
                   letterSpacing: "-0.03em",
                   position: "relative",
                   zIndex: 2,
+                  textAlign: "center",
+                  width: "100%",
                 }}
               >
                 Empowering students to learn, build, and innovate on AWS.
@@ -186,7 +192,7 @@ export default function About() {
                   width: "100%",
                   maxWidth: "900px",
                   textAlign: "center",
-                  margin: "0 auto",
+                  margin: "24px auto 0 auto",
                 }}
               >
                 <p
@@ -220,7 +226,7 @@ export default function About() {
                 height: "1px",
                 background: "linear-gradient(90deg, transparent, rgba(255,153,0,.18), rgba(0,115,187,.12), transparent)",
                 width: "100%",
-                margin: "8px 0",
+                margin: "16px 0",
                 position: "relative",
                 zIndex: 2,
               }} />
@@ -236,11 +242,11 @@ export default function About() {
         {/* Separator line animated left to right */}
         <motion.div
           initial={{ scaleX: 0 }}
-          animate={inView ? { scaleX: 1 } : {}}
+          animate={{ scaleX: 1 }}
           transition={{ duration: 0.8, ease: "easeOut", delay: 0.4 }}
           style={{
             height: "1px",
-            background: "linear-gradient(90deg, transparent, #FF9900 25%, rgb(130,68,239) 50%, #0073BB 75%, transparent)",
+            background: "linear-gradient(90deg, transparent, #FF9900 25%, #232F3E 50%, #0073BB 75%, transparent)",
             width: "100%",
             transformOrigin: "left",
           }}

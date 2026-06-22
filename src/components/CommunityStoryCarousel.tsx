@@ -156,9 +156,9 @@ export default function OurTeamShowcase() {
         OUR TEAM
       </div>
 
-      <div style={{ position: "absolute", top: "-5%", left: "-5%", width: "50vw", height: "50vw", borderRadius: "50%", background: "radial-gradient(circle,rgba(255,153,0,.07) 0%,transparent 70%)", filter: "blur(80px)", pointerEvents: "none" }} />
-      <div style={{ position: "absolute", bottom: "-5%", right: "-5%", width: "40vw", height: "40vw", borderRadius: "50%", background: "radial-gradient(circle,rgba(255,153,0,0.08) 0%,transparent 70%)", filter: "blur(80px)", pointerEvents: "none" }} />
-      <div style={{ position: "absolute", top: "20%", left: "30%", width: "30vw", height: "30vw", borderRadius: "50%", background: "radial-gradient(circle,rgba(130,68,239,.06) 0%,transparent 70%)", filter: "blur(60px)", pointerEvents: "none" }} />
+      <div style={{ position: "absolute", top: "-5%", left: "-5%", width: "50vw", height: "50vw", borderRadius: "50%", background: "radial-gradient(circle,rgba(255,153,0,.08) 0%,rgba(255,153,0,.03) 30%,transparent 70%)", filter: "blur(80px)", pointerEvents: "none" }} />
+      <div style={{ position: "absolute", bottom: "-5%", right: "-5%", width: "40vw", height: "40vw", borderRadius: "50%", background: "radial-gradient(circle,rgba(35,47,62,.05) 0%,rgba(35,47,62,.02) 30%,transparent 70%)", filter: "blur(80px)", pointerEvents: "none" }} />
+      <div style={{ position: "absolute", top: "20%", left: "30%", width: "30vw", height: "30vw", borderRadius: "50%", background: "radial-gradient(circle,rgba(255,153,0,.05) 0%,transparent 70%)", filter: "blur(60px)", pointerEvents: "none" }} />
 
       {/* Radial spotlight behind the active center card */}
       <motion.div

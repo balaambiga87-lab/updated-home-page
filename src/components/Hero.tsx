@@ -48,93 +48,119 @@ export default function Hero() {
         position: "relative",
         overflow: "hidden",
         padding: "40px 0",
+        zIndex: 2,
       }}
     >
-      {/* Static blurred glass particles & soft gradient mesh blobs */}
+      <style dangerouslySetInnerHTML={{__html: `
+        @keyframes silkFlow1 {
+          0% {
+            transform: scale(1.02) translate(0px, 0px) rotate(0deg);
+          }
+          33% {
+            transform: scale(1.10) translate(-25px, 15px) rotate(1deg);
+          }
+          66% {
+            transform: scale(1.05) translate(20px, -15px) rotate(-1deg);
+          }
+          100% {
+            transform: scale(1.02) translate(0px, 0px) rotate(0deg);
+          }
+        }
+
+        @keyframes silkFlow2 {
+          0% {
+            transform: scale(1.10) translate(0px, 0px) rotate(0deg);
+          }
+          33% {
+            transform: scale(1.03) translate(20px, -15px) rotate(-0.8deg);
+          }
+          66% {
+            transform: scale(1.07) translate(-25px, 15px) rotate(0.8deg);
+          }
+          100% {
+            transform: scale(1.10) translate(0px, 0px) rotate(0deg);
+          }
+        }
+
+        .silk-bg-layer-1 {
+          animation: silkFlow1 14s ease-in-out infinite;
+        }
+
+        .silk-bg-layer-2 {
+          animation: silkFlow2 18s ease-in-out infinite;
+        }
+      `}} />
+
+      {/* Animated Satin/Silk Background Layers */}
       <div
         style={{
           position: "absolute",
-          top: "10%",
-          right: "15%",
-          width: "400px",
-          height: "400px",
-          borderRadius: "50%",
-          background: "radial-gradient(ellipse at 95% 5%, rgba(255,153,0,.26) 0%, rgba(255,153,0,.12) 35%, rgba(255,255,255,0) 65%)",
-          filter: "blur(50px)",
+          inset: 0,
+          overflow: "hidden",
+          zIndex: 0,
           pointerEvents: "none",
+          userSelect: "none",
         }}
-      />
+      >
+        {/* Base Layer */}
+        <div
+          className="silk-bg-layer-1"
+          style={{
+            position: "absolute",
+            inset: -60,
+            backgroundImage: "url('/silk-hero-bg.png')",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            willChange: "transform",
+          }}
+        />
+        {/* Shimmer/Overlay Layer to simulate waving silk */}
+        <div
+          className="silk-bg-layer-2"
+          style={{
+            position: "absolute",
+            inset: -60,
+            backgroundImage: "url('/silk-hero-bg.png')",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            opacity: 0.4,
+            mixBlendMode: "overlay",
+            willChange: "transform",
+          }}
+        />
+      </div>
+      {/* Subtle overlay to keep text readable against bright sky */}
       <div
         style={{
           position: "absolute",
-          bottom: "10%",
-          left: "10%",
-          width: "500px",
-          height: "500px",
-          borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(0,115,187,.14) 0%, rgba(255,255,255,0) 70%)",
-          filter: "blur(55px)",
-          pointerEvents: "none",
-        }}
-      />
-      <div
-        style={{
-          position: "absolute",
-          top: "30%",
-          right: "30%",
-          width: "350px",
-          height: "350px",
-          borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(130,68,239,.12) 0%, rgba(255,255,255,0) 70%)",
-          filter: "blur(55px)",
-          pointerEvents: "none",
-        }}
-      />
-      <div
-        style={{
-          position: "absolute",
-          top: "40%",
-          left: "45%",
-          width: "300px",
-          height: "300px",
-          borderRadius: "50%",
-          background: "rgba(30, 45, 61, 0.02)",
-          filter: "blur(30px)",
+          inset: 0,
+          background: "rgba(255, 255, 255, 0.08)",
+          zIndex: 1,
           pointerEvents: "none",
         }}
       />
 
-      {/* Main Container */}
+      {/* Main Container - transparent so cloud bg shows through */}
       <motion.div
-        whileHover={{
-          boxShadow: "0 30px 80px rgba(15,23,42,0.12), 0 0 0 1px rgba(255,153,0,.07), inset 0 1px 0 rgba(255,255,255,1), inset 0 0 30px rgba(255,255,255,0.8)"
-        }}
         transition={{ duration: 0.4 }}
         style={{
           width: "100%",
-          maxWidth: "1300px",
+          maxWidth: "1000px",
           padding: isMobile ? "32px 24px" : "36px 56px",
           display: "flex",
-          flexDirection: isMobile ? "column" : "row",
-          justifyContent: "space-between",
+          flexDirection: "column",
+          justifyContent: "center",
           alignItems: "center",
-          gap: isMobile ? "40px" : "40px",
+          gap: "40px",
           zIndex: 10,
-          background: "linear-gradient(135deg, rgba(255,153,0,.12), rgba(0,115,187,.06)), rgba(255,255,255,.75)",
-          backdropFilter: "blur(20px)",
-          WebkitBackdropFilter: "blur(20px)",
-          border: "1px solid rgba(255,255,255,.95)",
-          boxShadow: "0 20px 60px rgba(15,23,42,.05), 0 0 0 1px rgba(255,153,0,.07), inset 0 1px 0 rgba(255,255,255,1), inset 0 0 30px rgba(255,255,255,.6)",
+          background: "transparent",
           borderRadius: "40px",
           position: "relative",
           overflow: "hidden",
           marginTop: isMobile ? "0px" : "-10px",
         }}
       >
-        {/* Soft floating gradient blobs inside the glass */}
-        <div style={{ position: "absolute", top: "-20%", left: "-10%", width: "50%", height: "50%", background: "radial-gradient(ellipse, rgba(255,255,255,0.8) 0%, transparent 70%)", filter: "blur(40px)", pointerEvents: "none", zIndex: 1 }} />
-        <div style={{ position: "absolute", bottom: "-20%", right: "-10%", width: "50%", height: "50%", background: "radial-gradient(ellipse, rgba(255,255,255,0.6) 0%, transparent 70%)", filter: "blur(40px)", pointerEvents: "none", zIndex: 1 }} />
-        {/* Left Side: Staggered Content */}
+        {/* Left Side: Staggered Content (Centered) */}
         <motion.div
           initial="hidden"
           animate="visible"
@@ -142,10 +168,16 @@ export default function Hero() {
             hidden: {},
             visible: { transition: { staggerChildren: 0.1 } }
           }}
-          style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", flex: 1, position: "relative", zIndex: 2 }}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            textAlign: "center",
+            width: "100%",
+            position: "relative",
+            zIndex: 2
+          }}
         >
-
-
           {/* Large Headline */}
           <motion.h1
             variants={{
@@ -155,10 +187,12 @@ export default function Hero() {
             style={{
               fontSize: "clamp(2.8rem, 6vw, 4.4rem)",
               fontWeight: 900,
-              color: "#232F3E",
+              color: "#1a0a00",
               lineHeight: 1.1,
               letterSpacing: "-0.03em",
               marginBottom: "16px",
+              textShadow: "0 2px 12px rgba(255,255,255,0.6)",
+              textAlign: "center",
             }}
           >
             AWS Student<br />Builders Group
@@ -176,15 +210,14 @@ export default function Hero() {
               marginBottom: "28px",
               display: "flex",
               alignItems: "center",
-              gap: "12px",
+              justifyContent: "center",
               height: "58px",
               position: "relative",
               width: "100%",
             }}
           >
-            <span style={{ fontSize: "1.2em", width: "32px", flexShrink: 0, textAlign: "center" }}>{ROTATING_TEXTS[textIndex].icon}</span>
-            <div style={{ position: "relative", flex: 1, height: "100%", overflow: "hidden" }}>
-              <AnimatePresence>
+            <div style={{ position: "relative", width: "100%", maxWidth: "450px", height: "100%", overflow: "hidden" }}>
+              <AnimatePresence mode="wait">
                 <motion.div
                   key={textIndex}
                   initial={{ opacity: 0, y: 24, filter: "blur(4px)" }}
@@ -194,13 +227,19 @@ export default function Hero() {
                   style={{
                     position: "absolute",
                     left: 0,
+                    right: 0,
                     top: 0,
                     bottom: 0,
                     display: "flex",
                     alignItems: "center",
+                    justifyContent: "center",
+                    gap: "12px",
                     whiteSpace: "nowrap",
                   }}
                 >
+                  <span style={{ fontSize: "1.2em", flexShrink: 0 }}>
+                    {ROTATING_TEXTS[textIndex].icon}
+                  </span>
                   <span
                     style={{
                       backgroundImage: "linear-gradient(90deg, #FF9900, #F7BA45, rgba(130,68,239,.8))",
@@ -225,22 +264,20 @@ export default function Hero() {
               visible: { opacity: 1, transition: { type: "spring" } }
             }}
             style={{
-              fontSize: "15px",
-              color: "#4b5563",
+              fontSize: "16px",
+              color: "#3d1a00",
               lineHeight: 1.8,
               marginBottom: "36px",
-              maxWidth: "500px",
+              maxWidth: "700px",
+              textShadow: "0 1px 6px rgba(255,255,255,0.5)",
+              textAlign: "center",
             }}
           >
             AWS Student Builders Group REC Chapter is a student-led cloud community focused on learning, building, and innovating with AWS. We empower students through hands-on projects, certifications, mentorship, hackathons, workshops, and industry-driven experiences that transform learners into cloud builders.
           </motion.p>
-
-
         </motion.div>
 
-
-
-        {/* Right Side Cloud Orbit */}
+        {/* Right Side Cloud Orbit - Kept in memory per request
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -257,6 +294,7 @@ export default function Hero() {
         >
           <CloudOrbit />
         </motion.div>
+        */}
       </motion.div>
     </section>
   );

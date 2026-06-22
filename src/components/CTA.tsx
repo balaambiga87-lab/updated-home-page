@@ -89,11 +89,11 @@ export default function CTA() {
           top: "30%",
           left: "50%",
           transform: "translateX(-50%)",
-          width: "400px",
-          height: "400px",
+          width: "500px",
+          height: "500px",
           borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(130,68,239,.12) 0%, transparent 70%)",
-          filter: "blur(60px)",
+          background: "radial-gradient(circle, rgba(255,153,0,.1) 0%, rgba(35,47,62,.04) 30%, transparent 70%)",
+          filter: "blur(70px)",
           pointerEvents: "none",
           zIndex: 0,
         }}
@@ -113,58 +113,6 @@ export default function CTA() {
           alignItems: "center",
         }}
       >
-        {/* LIVE NOW Badge */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={inView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
-          transition={{ type: "spring", stiffness: 200, damping: 18 }}
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "8px",
-            background: "rgba(255,153,0,.08)",
-            border: "1px solid rgba(255,153,0,.22)",
-            boxShadow: "0 0 12px rgba(255,153,0,.08), inset 0 1px 0 rgba(255,255,255,.8)",
-            borderRadius: "100px",
-            padding: "6px 16px",
-            marginBottom: "22px",
-            position: "relative",
-            overflow: "hidden",
-          }}
-        >
-          {/* Shimmer sweep */}
-          <div
-            style={{
-              position: "absolute",
-              top: 0,
-              bottom: 0,
-              width: "30%",
-              background: "linear-gradient(90deg, transparent, rgba(255, 153, 0, 0.15), transparent)",
-              animation: "scanLine 3s ease infinite",
-            }}
-          />
-          <div
-            style={{
-              width: "6px",
-              height: "6px",
-              borderRadius: "50%",
-              background: "#10b981", // green pulsing dot
-              animation: "pulseDot 2s infinite",
-            }}
-          />
-          <span
-            style={{
-              fontSize: "11px",
-              fontWeight: 800,
-                  color: "#E68900",
-              textTransform: "uppercase",
-              letterSpacing: "0.12em",
-            }}
-          >
-            Live Now
-          </span>
-        </motion.div>
-
         {/* Heading */}
         <motion.h2
           initial={{ opacity: 0, y: 24 }}
@@ -180,7 +128,7 @@ export default function CTA() {
           }}
         >
           Ready to start your{" "}
-          <span style={{ backgroundImage: "linear-gradient(90deg, #FF9900, rgb(130,68,239))", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>cloud journey?</span>
+          <span style={{ backgroundImage: "linear-gradient(90deg, #FF9900, #232F3E)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>cloud journey?</span>
         </motion.h2>
 
         {/* Description */}
@@ -214,7 +162,7 @@ export default function CTA() {
         >
           {/* Magnetic primary button */}
           <motion.button
-            whileHover={{ boxShadow: "0 14px 40px rgba(255,153,0,.48)" }}
+            whileHover={{ boxShadow: "0 20px 50px rgba(255,153,0,.5), 0 0 40px rgba(255,153,0,.2)" }}
             style={{ x: sx, y: sy, border: "none", background: "transparent", padding: 0, borderRadius: "100px" }}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
@@ -223,15 +171,15 @@ export default function CTA() {
             <span
               style={{
                 display: "block",
-                padding: "14px 32px",
+                padding: "14px 36px",
                 borderRadius: "100px",
-                background: "linear-gradient(135deg, #FF9900 0%, #E68900 100%)",
+                background: "linear-gradient(135deg, #FFB020 0%, #FF9900 50%, #E68900 100%)",
                 color: "#1e2d3d",
                 fontSize: "14px",
                 fontWeight: 800,
                 cursor: "pointer",
                 fontFamily: "inherit",
-                boxShadow: "0 8px 28px rgba(255,153,0,.38), 0 4px 12px rgba(255,153,0,.22)",
+                boxShadow: "0 8px 28px rgba(255,153,0,.4), 0 4px 12px rgba(255,153,0,.25), inset 0 1px 0 rgba(255,255,255,.4)",
                 transition: "background 0.2s ease",
               }}
             >
@@ -242,7 +190,7 @@ export default function CTA() {
           {/* Secondary Button */}
           <motion.a
             href="#gallery"
-            whileHover={{ background: "rgba(255,153,0,.08)", borderColor: "#FF9900", color: "#FF9900", y: -2 }}
+            whileHover={{ background: "rgba(255,153,0,.1)", borderColor: "#FF9900", color: "#FF9900", y: -3, boxShadow: "0 12px 28px rgba(255,153,0,.12)" }}
             whileTap={{ scale: 0.96 }}
             style={{
               padding: "14px 32px",

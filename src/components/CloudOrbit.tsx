@@ -560,7 +560,7 @@ export default function CloudOrbit() {
                 left: cx - r,
                 top: cy - r,
                 borderRadius: "50%",
-                border: "1.5px solid rgba(200,210,220,.4)",
+                border: "1.5px solid rgba(3, 28, 54, 0.45)",
                 background: "transparent",
                 pointerEvents: "none",
                 animation: `spinSlow ${dur} linear infinite`,
@@ -685,7 +685,7 @@ export default function CloudOrbit() {
               y1={cy}
               x2={mv[i][0]}
               y2={mv[i][1]}
-              stroke={isH ? "rgba(255,153,0,0.45)" : "rgba(0,0,0,.08)"}
+              stroke={isH ? "rgba(255,153,0,0.6)" : "rgba(35, 47, 62, 0.15)"}
               strokeWidth={isH ? 2.5 : 1}
               strokeDasharray={isH ? "none" : "4 4"}
               style={{ transition: "stroke 0.3s, stroke-width 0.3s" }}
