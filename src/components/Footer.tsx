@@ -15,7 +15,7 @@ const COLS = [
     h: "Resources",
     links: [
       { label: "Our Team", href: "/#team" },
-      { label: "Community", href: "/#community" }
+      { label: "Community", href: "/#about" }
     ]
   },
   {

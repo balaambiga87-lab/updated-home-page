@@ -19,7 +19,7 @@ export default function AnimatedCloudBackground() {
         overflow: "hidden",
         pointerEvents: "none",
         zIndex: 1,
-        background: "linear-gradient(135deg, #ffffff 0%, #FFF5E8 60%, #FFEAD2 100%)",
+        background: "#ffffff",
       }}
     />
   );

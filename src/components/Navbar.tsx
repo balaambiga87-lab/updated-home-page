@@ -39,14 +39,14 @@ export default function Navbar() {
     };
   }, []);
 
-  // Shared premium styling variables for all floating navbar bars: Navy blue gradients
+  // Shared premium styling variables for all floating navbar bars: Clean white glassmorphism
   const barBackground = scrolled
-    ? "linear-gradient(135deg, rgba(3, 28, 54, 0.96) 0%, rgba(15, 43, 73, 0.96) 100%)"
-    : "linear-gradient(135deg, rgba(3, 28, 54, 0.88) 0%, rgba(15, 43, 73, 0.88) 100%)";
+    ? "rgba(255, 255, 255, 0.95)"
+    : "rgba(255, 255, 255, 0.85)";
 
   const barBorder = scrolled
-    ? "1px solid rgba(255, 255, 255, 0.25)"
-    : "1px solid rgba(255, 255, 255, 0.15)";
+    ? "1px solid rgba(0, 0, 0, 0.12)"
+    : "1px solid rgba(0, 0, 0, 0.08)";
 
   return (
     <>
@@ -92,8 +92,8 @@ export default function Navbar() {
               border: barBorder,
               borderRadius: "14px",
               boxShadow: scrolled
-                ? "0 16px 40px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,153,0,0.05)"
-                : "0 6px 24px rgba(0,0,0,0.15), 0 0 0 1px rgba(255,153,0,0.02)",
+                ? "0 12px 30px rgba(0,0,0,0.08), 0 0 1px rgba(0,0,0,0.05)"
+                : "0 4px 20px rgba(0,0,0,0.04), 0 0 1px rgba(0,0,0,0.05)",
               transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
               outline: "none",
               outlineOffset: 0,
@@ -121,10 +121,10 @@ export default function Navbar() {
                 />
               </motion.div>
               <div style={{ display: "flex", flexDirection: "column", outline: "none" }}>
-                <span style={{ fontWeight: 800, fontSize: "14px", color: "#ffffff", lineHeight: 1.2, letterSpacing: "-0.01em", whiteSpace: "nowrap" }}>
+                <span style={{ fontWeight: 800, fontSize: "14px", color: "#232F3E", lineHeight: 1.2, letterSpacing: "-0.01em", whiteSpace: "nowrap" }}>
                   AWS SBG REC
                 </span>
-                <span style={{ fontSize: "9px", color: "rgba(255, 255, 255, 0.7)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", whiteSpace: "nowrap" }}>
+                <span style={{ fontSize: "9px", color: "rgba(35, 47, 62, 0.7)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", whiteSpace: "nowrap" }}>
                   Student Builders Group
                 </span>
               </div>
@@ -143,7 +143,7 @@ export default function Navbar() {
                   justifyContent: "center",
                   padding: "6px",
                   marginLeft: "4px",
-                  color: "rgba(255, 255, 255, 0.85)",
+                  color: "#232F3E",
                   outline: "none",
                   outlineOffset: 0,
                 }}
@@ -181,8 +181,8 @@ export default function Navbar() {
                 border: barBorder,
                 borderRadius: "14px",
                 boxShadow: scrolled
-                  ? "0 16px 40px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,153,0,0.05)"
-                  : "0 6px 24px rgba(0,0,0,0.15), 0 0 0 1px rgba(255,153,0,0.02)",
+                  ? "0 12px 30px rgba(0,0,0,0.08), 0 0 1px rgba(0,0,0,0.05)"
+                  : "0 4px 20px rgba(0,0,0,0.04), 0 0 1px rgba(0,0,0,0.05)",
                 transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                 outline: "none",
                 outlineOffset: 0,
@@ -198,7 +198,7 @@ export default function Navbar() {
                     position: "relative",
                     fontSize: "13px",
                     fontWeight: 600,
-                    color: hoveredIdx === idx ? "#FF9900" : "rgba(255, 255, 255, 0.85)",
+                    color: hoveredIdx === idx ? "#FF9900" : "#232F3E",
                     textDecoration: "none",
                     padding: "7px 14px",
                     borderRadius: "8px",
@@ -244,8 +244,8 @@ export default function Navbar() {
               border: barBorder,
               borderRadius: "14px",
               boxShadow: scrolled
-                ? "0 16px 40px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,153,0,0.05)"
-                : "0 6px 24px rgba(0,0,0,0.15), 0 0 0 1px rgba(255,153,0,0.02)",
+                ? "0 12px 30px rgba(0,0,0,0.08), 0 0 1px rgba(0,0,0,0.05)"
+                : "0 4px 20px rgba(0,0,0,0.04), 0 0 1px rgba(0,0,0,0.05)",
               transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
               outline: "none",
               outlineOffset: 0,
@@ -254,17 +254,17 @@ export default function Navbar() {
             <motion.button
               whileHover={{
                 scale: 1.02,
-                borderColor: "#ffffff",
-                color: "#ffffff",
-                backgroundColor: "rgba(255, 255, 255, 0.12)"
+                borderColor: "#232F3E",
+                color: "#232F3E",
+                backgroundColor: "rgba(0, 0, 0, 0.04)"
               }}
               whileTap={{ scale: 0.96 }}
               style={{
                 padding: isMobile ? "6px 12px" : "8px 18px",
                 borderRadius: "10px",
-                border: "1.5px solid rgba(255, 255, 255, 0.25)",
+                border: "1.5px solid rgba(35, 47, 62, 0.3)",
                 background: "transparent",
-                color: "rgba(255, 255, 255, 0.85)",
+                color: "#232F3E",
                 fontSize: isMobile ? "12px" : "13px",
                 fontWeight: 700,
                 cursor: "pointer",
@@ -289,7 +289,7 @@ export default function Navbar() {
                 borderRadius: "10px",
                 border: "none",
                 background: "linear-gradient(135deg, #FF9900, #FF6600)",
-                color: "#031C36",
+                color: "#ffffff",
                 fontSize: isMobile ? "12px" : "13px",
                 fontWeight: 800,
                 cursor: "pointer",
@@ -318,13 +318,13 @@ export default function Navbar() {
                   top: "66px",
                   left: "24px",
                   right: "24px",
-                  background: "rgba(3, 28, 54, 0.98)",
+                  background: "rgba(255, 255, 255, 0.98)",
                   backdropFilter: "blur(24px)",
                   WebkitBackdropFilter: "blur(24px)",
-                  border: "1px solid rgba(255, 255, 255, 0.15)",
+                  border: "1px solid rgba(0, 0, 0, 0.08)",
                   borderRadius: "14px",
                   padding: "16px 8px",
-                  boxShadow: "0 20px 40px rgba(0, 0, 0, 0.4)",
+                  boxShadow: "0 10px 30px rgba(0, 0, 0, 0.08)",
                   display: "flex",
                   flexDirection: "column",
                   gap: "4px",
@@ -340,7 +340,7 @@ export default function Navbar() {
                     style={{
                       fontSize: "14px",
                       fontWeight: 600,
-                      color: "rgba(255, 255, 255, 0.85)",
+                      color: "#232F3E",
                       textDecoration: "none",
                       padding: "10px 20px",
                       borderRadius: "12px",
@@ -350,12 +350,12 @@ export default function Navbar() {
                       outlineOffset: 0,
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.background = "rgba(255, 255, 255, 0.12)";
+                      e.currentTarget.style.background = "rgba(0, 0, 0, 0.04)";
                       e.currentTarget.style.color = "#FF9900";
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.background = "transparent";
-                      e.currentTarget.style.color = "rgba(255, 255, 255, 0.85)";
+                      e.currentTarget.style.color = "#232F3E";
                     }}
                   >
                     {link.label}
@@ -366,46 +366,6 @@ export default function Navbar() {
           </AnimatePresence>
         </div>
       </motion.nav>
-
-      {/* Ambient orange glow blob (center top) */}
-      <div
-        style={{
-          position: "fixed",
-          top: 0,
-          left: "20%",
-          width: "60%",
-          height: "180px",
-          background: "radial-gradient(ellipse at 50% 5%, rgba(255,153,0,.22) 0%, rgba(255,153,0,.1) 35%, rgba(255,255,255,0) 65%)",
-          pointerEvents: "none",
-          zIndex: 898,
-        }}
-      />
-      {/* Left slate glow blob */}
-      <div
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "35%",
-          height: "160px",
-          background: "radial-gradient(ellipse at 5% 5%, rgba(35,47,62,.08) 0%, rgba(35,47,62,.03) 35%, rgba(255,255,255,0) 65%)",
-          pointerEvents: "none",
-          zIndex: 898,
-        }}
-      />
-      {/* Right orange glow blob */}
-      <div
-        style={{
-          position: "fixed",
-          top: 0,
-          right: 0,
-          width: "35%",
-          height: "160px",
-          background: "radial-gradient(ellipse at 95% 5%, rgba(255,153,0,.18) 0%, rgba(255,153,0,.08) 35%, rgba(255,255,255,0) 65%)",
-          pointerEvents: "none",
-          zIndex: 898,
-        }}
-      />
     </>
   );
 }
